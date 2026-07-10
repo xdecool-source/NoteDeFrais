@@ -21,7 +21,6 @@ from app.models.user import User
 
 from app.routers import auth, dashboard, expenses, users, admin
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     create_tables()
@@ -43,6 +42,7 @@ app.include_router(dashboard.router)
 app.include_router(expenses.router)
 app.include_router(users.router)
 app.include_router(admin.router,prefix="/admin",tags=["Administration"],)
+
 
 @app.get("/")
 async def root():

@@ -5,6 +5,7 @@ Ajoute request au contexte, puis les autres données comme user, expenses, km_ra
 """
 
 from fastapi import Request
+from app.core.config import settings
 
 def template_context(request: Request, **kwargs):
     """
@@ -12,6 +13,7 @@ def template_context(request: Request, **kwargs):
     """
     context = {
         "request": request,
+        "APP_VERSION": settings.APP_VERSION,
     }
     context.update(kwargs)
     return context

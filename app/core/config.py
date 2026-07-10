@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     # Application
     
     APP_NAME: str = "Note de Frais"
-    APP_VERSION: str = "1.0.0"
+    APP_VERSION: str = "1.1 Xdc TT Thuirinois"
     DEBUG: bool = True
 
     # Sécurité
@@ -25,7 +25,6 @@ class Settings(BaseSettings):
     KM_RATE: float = 0.35
     R2_PREFIX: str = "repository"
     R2_EXPENSE_FOLDER: str = "depenses"
-
 
     # Base de données
     
@@ -45,6 +44,3 @@ class Settings(BaseSettings):
         case_sensitive=True,
     )
 settings = Settings()
-
-
-

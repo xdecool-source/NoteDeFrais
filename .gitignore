@@ -1,7 +1,30 @@
-*.pyc
-.env
-Procfile
-A_Info/
+# Python
 __pycache__/
+*.py[cod]
+*.pyo
+
+# Environnement virtuel
+.venv/
+venv/
+env/
+
+# Variables d'environnement
+.env
+
+# Déploiement
+Procfile
+
+# Dossiers spécifiques au projet
+A_Info/
 DB/
 Database/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# Système
+.DS_Store
+Thumbs.db
