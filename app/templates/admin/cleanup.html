@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}
+Nettoyage de la base
+{% endblock %}
+{% block content %}
+
+<div class="container">
+    <h2 class="mb-4">
+        🗑 Nettoyage de la base
+    </h2>
+    {% if deleted is defined %}
+    <div class="alert alert-success">
+        <strong>
+            Opération terminée.
+        </strong>
+        <br>
+        {{ deleted }} note(s) de frais supprimée(s).
+    </div>
+    {% endif %}
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="alert alert-danger">
+                <strong>
+                    Attention
+                </strong>
+                <hr>
+                Cette opération supprimera définitivement :
+                <ul class="mb-0">
+                    <li>les notes de frais ;</li>
+                    <li>les lignes de frais ;</li>
+                    <li>les justificatifs.</li>
+                </ul>
+                <br>
+                Les utilisateurs seront conservés.
+            </div>
+            <form
+                method="post"
+                id="cleanupForm">
+                <div class="d-flex justify-content-between">
+                    <a
+                        href="/admin/maintenance"
+                        class="btn btn-secondary">
+                        Retour
+                    </a>
+                    <button
+                        class="btn btn-danger"
+                        type="submit">
+                        🗑 Nettoyer la base
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+
+document
+.getElementById("cleanupForm")
+.addEventListener(
+    "submit",
+    function(event){
+        if(
+            !confirm(
+                "Toutes les notes de frais seront supprimées.\n\nConfirmez-vous ?"
+            )
+        ){
+            event.preventDefault();
+        }
+    }
+);
+</script>
+{% endblock %}

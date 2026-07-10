@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Bienvenue {{ user.full_name }}</h2>
+<hr>
+<p>Utilisateur : {{ user.username }}</p>
+<p>Email : {{ user.email }}</p>
+<p>
+    Administrateur :
+    {% if user.is_admin %}
+        Valide
+    {% else %}
+        Non valide
+    {% endif %}
+</p>
+<a href="/auth/logout">
+    Déconnexion
+</a>
+{% endblock %}

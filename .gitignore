@@ -1,0 +1,7 @@
+*.pyc
+.env
+Procfile
+A_Info/
+__pycache__/
+DB/
+Database/

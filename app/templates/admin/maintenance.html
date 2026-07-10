@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}
+Administration
+{% endblock %}
+{% block content %}
+
+<div class="container">
+    <div class="mb-4">
+        <h2>
+            Administration
+        </h2>
+        <p class="text-muted">
+            Outils de maintenance de l'application.
+        </p>
+    </div>
+    <a
+        href="/expenses/validate"
+        class="btn btn-outline-primary">
+        Retour aux Notes De Frais
+    </a>
+</div>
+    <div class="row g-4">
+
+
+        <!-- Export Excel -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h4>
+                        📊 Export Excel
+                    </h4>
+                    <p class="text-muted">
+                        Génère le classeur Excel complet
+                        d'un exercice comptable.
+                    </p>
+                </div>
+                <div class="card-footer bg-white border-0">
+                    <a
+                        href="/admin/excel"
+                        class="btn btn-success w-100">
+                        Ouvrir
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        
+
+        <!-- Nettoyage -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h4>
+                        🗑 Nettoyer la base
+                    </h4>
+                    <p class="text-muted">
+                        <b>ATTENTION ACTION IRREVERSIBLE</b><br>
+                        Supprime toutes les notes de frais
+                        en conservant les utilisateurs.
+                        Ne pas oublier de supprimer les fichiers 
+                        dans Cloudflare 
+                    </p>
+                </div>
+                <div class="card-footer bg-white border-0">
+                    <a
+                        href="/admin/cleanup"
+                        class="btn btn-danger w-100">
+                        Ouvrir
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

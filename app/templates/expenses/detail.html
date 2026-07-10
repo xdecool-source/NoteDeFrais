@@ -1,0 +1,801 @@
+{% extends "base.html" %}
+{% block title %}
+Détail de la note de frais
+{% endblock %}
+{% block content %}
+
+<!-- INFORMATIONS DE LA NOTE -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header">
+        <h3 class="mb-0">
+            {{ expense.label }}
+        </h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <strong>Date</strong>
+                <br>
+                {{ expense.expense_date }}
+            </div>
+            <div class="col-md-4">
+                <strong>Statut</strong>
+                <br>
+                {{ expense.status.value }}
+            </div>
+            <div class="col-md-4 text-md-end">
+                <strong>Total</strong>
+                <br>
+                {{ "%.2f"|format(expense.total_amount) }} €
+            </div>
+        </div>
+    </div>
+</div>
+<!-- historique du workflow -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">
+            Historique
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <!-- creation -->
+            <div class="col-md-3 mb-3">
+                <strong>
+                    Création
+                </strong>
+                <br>
+                {{ expense.created_at.strftime("%d/%m/%Y à %H:%M") }}
+            </div>
+            <!-- soumission -->
+            <div class="col-md-3 mb-3">
+                <strong>
+                    Soumission
+                </strong>
+                <br>
+                {% if expense.submitted_at %}
+                    {{ expense.submitted_at.strftime("%d/%m/%Y à %H:%M") }}
+                {% else %}
+                    -
+                {% endif %}
+            </div>
+            <!-- validation -->
+            <div class="col-md-3 mb-3">
+                <strong>
+                    Validation
+                </strong>
+                <br>
+                {% if expense.approved_at %}
+                    {{ expense.approved_at.strftime("%d/%m/%Y à %H:%M") }}
+                {% else %}
+                    -
+                {% endif %}
+            </div>
+            <!-- remboursement -->
+            <div class="col-md-3 mb-3">
+                <strong>
+                    Remboursement
+                </strong>
+                <br>
+                {% if expense.paid_at %}
+                    {{ expense.paid_at.strftime("%d/%m/%Y à %H:%M") }}
+                {% else %}
+                    -
+                {% endif %}
+            </div>
+        </div>
+        <!-- motif du refus -->
+        {% if expense.status.name == "REJECTED"
+              and expense.rejection_reason %}
+            <div class="alert alert-danger mb-0">
+                <strong>
+                    Motif du refus
+                </strong>
+                <br>
+                {{ expense.rejection_reason }}
+            </div>
+        {% endif %}
+    </div>
+</div>
+<!-- lignes de frais -->
+<h4 class="mb-3">
+    Lignes de frais
+</h4>
+{% if expense.items %}
+    {% for item in expense.items %}
+        <div class="card shadow-sm mb-3">
+            <!-- titre de la ligne -->
+            <div class="card-header">
+                {% if item.item_type.name == "KM" %}
+                    🚗 Déplacement
+                {% elif item.item_type.name == "REPAS" %}
+                    🍽 Repas
+                {% elif item.item_type.name == "FOURNITURE" %}
+                    🛒 Fournitures
+                {% elif item.item_type.name == "HOTEL" %}
+                    🏨 Hôtel
+                {% elif item.item_type.name == "OTHER" %}
+                    📦 Autre
+                {% else %}
+                    {{ item.item_type.value }}
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <!-- deplacement -->
+                {% if item.item_type.name == "KM" %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <strong>Départ</strong>
+                            <br>
+                            {{ item.departure or "-" }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong>Arrivée</strong>
+                            <br>
+                            {{ item.arrival or "-" }}
+                        </div>
+                    </div>
+                    <div class="row">
+                    <!-- kilometres -->
+                    <div class="col-6 col-md-3 mb-3">
+                        <strong>Kilomètres</strong>
+                        <br>
+                       {{ "%.1f km"|format(item.kilometers) if item.kilometers is not none else "-" }}
+                    <!-- tarif kilometrique -->
+                    <div class="col-6 col-md-3 mb-3">
+                        <strong>Tarif kilométrique</strong>
+                        <br>
+                        {{ "%.2f"|format(item.km_rate or 0) }} €/km
+                    </div>
+                    <!-- vehicule -->
+                    <div class="col-6 col-md-3 mb-3">
+                        <strong>Véhicule</strong>
+                        <br>
+                        {% if item.is_electric_vehicle %}
+                            <span class="badge bg-success">
+                                Électrique (+20 %)
+                            </span>
+                        {% else %}
+                            <span class="badge bg-secondary">
+                                Thermique
+                            </span>
+                        {% endif %}
+                    </div>
+                    <!-- peage -->
+                    <div class="col-6 col-md-3 mb-3">
+                        <strong>Péage</strong>
+                        <br>
+                        {{ "%.2f"|format(item.toll_amount or 0) }} €
+                    </div>
+                    <!-- divers -->
+                    <div class="col-6 col-md-3 mb-3">
+                        <strong>Divers</strong>
+                        <br>
+                        {{ "%.2f"|format(item.other_amount or 0) }} €
+                    </div>
+                </div>
+                    <hr>
+                    <div class="text-end">
+                        <strong>
+                            Montant :
+                            {{ "%.2f"|format(item.amount or 0) }} €
+                        </strong>
+                    </div>
+                <!-- autres types -->
+                {% else %}
+                    <div class="row">
+                        <div class="col-md-9 mb-3">
+                            <strong>Description</strong>
+                            <br>
+                            {{ item.description or "-" }}
+                        </div>
+                        <div class="col-md-3 mb-3 text-md-end">
+                            <strong>Montant</strong>
+                            <br>
+                            {{ "%.2f"|format(item.amount or 0) }} €
+                        </div>
+                    </div>
+                {% endif %}
+                <!-- justificatifs -->
+                <hr>
+                <div class="mt-3 receipt-container">
+                    <h6>
+                        Justificatifs
+                    </h6>
+                    <!-- liste des justificatifs -->
+                    {% if item.receipts %}
+                        <ul class="list-group mb-3">
+                            {% for receipt in item.receipts %}
+                                <li
+                                    class="
+                                        list-group-item
+                                        d-flex
+                                        justify-content-between
+                                        align-items-center
+                                        flex-wrap
+                                        gap-3
+                                    ">
+                                    <!-- informations du fichier -->
+                                    <div>
+                                        📎
+                                        <strong>
+                                            {{ receipt.original_filename }}
+                                        </strong>
+                                        <br>
+                                        <small class="text-muted">
+                                            {{ "%.1f"|format(
+                                                receipt.file_size / 1024
+                                            ) }} Ko
+                                        </small>
+                                    </div>
+                                    <!-- actions -->
+                                    <div class="d-flex gap-2 flex-wrap">
+                                        <!-- VOIR -->
+                                        <a
+                                            href="/expenses/{{ expense.id }}/receipts/{{ receipt.id }}/view"
+                                            target="_blank"
+                                            class="btn btn-sm btn-outline-primary">
+                                            Voir
+                                        </a>
+                                        <!-- telecharger -->
+                                        <a
+                                            href="/expenses/{{ expense.id }}/receipts/{{ receipt.id }}/download"
+                                            class="btn btn-sm btn-outline-secondary">
+                                            Télécharger
+                                        </a>
+                                        <!-- supprimer -->
+                                        {% if expense.status.name == "DRAFT" %}
+                                            <button
+                                                type="button"
+                                                class="
+                                                    btn
+                                                    btn-sm
+                                                    btn-outline-danger
+                                                    btn-delete-receipt
+                                                "
+                                                data-expense-id="{{ expense.id }}"
+                                                data-receipt-id="{{ receipt.id }}">
+                                                Supprimer
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">
+                            Aucun justificatif.
+                        </p>
+                    {% endif %}
+                    <!-- ajout d'un justificatif -->
+                    {% if expense.status.name == "DRAFT" %}
+                        <div class="input-group">
+                            <input
+                                type="file"
+                                class="form-control receipt-file"
+                                accept=".pdf,.jpg,.jpeg,.png">
+                            <button
+                                type="button"
+                                class="
+                                    btn
+                                    btn-outline-primary
+                                    btn-upload-receipt
+                                "
+                                data-expense-id="{{ expense.id }}"
+                                data-item-id="{{ item.id }}">
+                                Ajouter
+                            </button>
+                        </div>
+                        <div class="receipt-message mt-2">
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="alert alert-info">
+        Cette note de frais ne contient aucune ligne.
+    </div>
+{% endif %}
+<!-- actions -->
+<div class="mt-4">
+    <a
+        href="/expenses/"
+        class="btn btn-secondary">
+        Retour
+    </a>
+    <!-- note en brouillon -->
+    {% if expense.status.name == "DRAFT" %}
+        <a
+            href="/expenses/{{ expense.id }}/edit"
+            class="btn btn-primary">
+            Modifier
+        </a>
+        <button
+            type="button"
+            id="btn-submit-expense"
+            class="btn btn-success"
+            data-expense-id="{{ expense.id }}">
+            Soumettre
+        </button>
+    {% endif %}
+    <!-- note soumise + admin -->
+    {% if expense.status.name == "SUBMITTED" and user.is_admin %}
+        <button
+            type="button"
+            id="btn-approve-expense"
+            class="btn btn-success"
+            data-expense-id="{{ expense.id }}">
+            Valider
+        </button>
+        <button
+            type="button"
+            id="btn-reject-expense"
+            class="btn btn-danger"
+            data-expense-id="{{ expense.id }}">
+            Refuser
+        </button>
+    {% endif %}
+    <!-- note validee + admin -->
+    {% if expense.status.name == "APPROVED" and user.is_admin %}
+        <button
+            type="button"
+            id="btn-pay-expense"
+            class="btn btn-success"
+            data-expense-id="{{ expense.id }}">
+            Marquer comme payée
+        </button>
+    {% endif %}
+</div>
+<!-- modale de refus -->
+<div
+    class="modal fade"
+    id="rejectExpenseModal"
+    tabindex="-1"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Refuser la note de frais
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+            </div>
+            <div class="modal-body">
+                <label
+                    for="rejection-reason"
+                    class="form-label">
+                    Motif du refus
+                </label>
+                <textarea
+                    id="rejection-reason"
+                    class="form-control"
+                    rows="4"
+                    maxlength="1000"
+                    placeholder="Indiquez le motif du refus..."
+                    required></textarea>
+                <div
+                    id="rejection-error"
+                    class="text-danger mt-2 d-none">
+                    Le motif doit contenir au moins 3 caractères.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+                    Annuler
+                </button>
+                <button
+                    type="button"
+                    id="btn-confirm-reject"
+                    class="btn btn-danger">
+                    Confirmer le refus
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+// soumission d'une note
+
+
+const submitButton =
+    document.getElementById("btn-submit-expense");
+
+
+if (submitButton) {
+    submitButton.addEventListener(
+        "click",
+        async function () {
+            const expenseId =
+                submitButton.dataset.expenseId;
+            const confirmation =
+                confirm(
+                    "Voulez-vous soumettre cette note de frais ?"
+                );
+            if (!confirmation) {
+                return;
+            }
+            try {
+                const response =
+                    await fetch(
+                        "/expenses/" + expenseId + "/submit",
+                        {
+                            method: "POST",
+                            credentials: "same-origin",
+                        }
+                    );
+                if (!response.ok) {
+                    const error =
+                        await response.text();
+                    console.error(error);
+                    throw new Error(
+                        "Erreur lors de la soumission"
+                    );
+                }
+                window.location.reload();
+            }
+            catch (error) {
+                console.error(error);
+                alert(
+                    "Impossible de soumettre la note de frais."
+                );
+            }
+        }
+    );
+}
+// validation d'une note
+
+
+const approveButton =
+    document.getElementById("btn-approve-expense");
+
+
+if (approveButton) {
+    approveButton.addEventListener(
+        "click",
+        async function () {
+            const expenseId =
+                approveButton.dataset.expenseId;
+            const confirmation =
+                confirm(
+                    "Voulez-vous valider cette note de frais ?"
+                );
+            if (!confirmation) {
+                return;
+            }
+            try {
+                const response =
+                    await fetch(
+                        "/expenses/" + expenseId + "/approve",
+                        {
+                            method: "POST",
+                            credentials: "same-origin",
+                        }
+                    );
+                if (!response.ok) {
+                    const error =
+                        await response.text();
+                    console.error(error);
+                    throw new Error(
+                        "Erreur lors de la validation"
+                    );
+                }
+                window.location.reload();
+            }
+            catch (error) {
+                console.error(error);
+                alert(
+                    "Impossible de valider la note de frais."
+                );
+            }
+        }
+    );
+}
+// refus d'une note
+
+
+const rejectButton =
+    document.getElementById("btn-reject-expense");
+const confirmRejectButton =
+    document.getElementById("btn-confirm-reject");
+const rejectionReason =
+    document.getElementById("rejection-reason");
+const rejectionError =
+    document.getElementById("rejection-error");
+// ouverture de la modale de refus
+
+
+if (rejectButton) {
+    rejectButton.addEventListener(
+        "click",
+        function () {
+            rejectionReason.value = "";
+            rejectionError.classList.add("d-none");
+            const modalElement =
+                document.getElementById(
+                    "rejectExpenseModal"
+                );
+            const rejectModal =
+                bootstrap.Modal.getOrCreateInstance(
+                    modalElement
+                );
+            rejectModal.show();
+        }
+    );
+}
+// confirmation du refus
+
+
+if (confirmRejectButton) {
+    confirmRejectButton.addEventListener(
+        "click",
+        async function () {
+            const reason =
+                rejectionReason.value.trim();
+            if (reason.length < 3) {
+                rejectionError.classList.remove(
+                    "d-none"
+                );
+                return;
+            }
+            rejectionError.classList.add(
+                "d-none"
+            );
+            const expenseId =
+                rejectButton.dataset.expenseId;
+            try {
+                const response =
+                    await fetch(
+                        "/expenses/"
+                        + expenseId
+                        + "/reject",
+                        {
+                            method: "POST",
+                            credentials:
+                                "same-origin",
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+                            body:
+                                JSON.stringify({
+                                    rejection_reason:
+                                        reason
+                                })
+                        }
+                    );
+                if (!response.ok) {
+                    const errorText =
+                        await response.text();
+                    console.error(
+                        "Erreur serveur :",
+                        errorText
+                    );
+                    throw new Error(
+                        "Erreur lors du refus"
+                    );
+                }
+                window.location.reload();
+            }
+            catch (error) {
+                console.error(error);
+                alert(
+                    "Impossible de refuser la note de frais."
+                );
+            }
+        }
+    );
+}
+// remboursement d'une note
+
+const payButton =
+    document.getElementById("btn-pay-expense");
+
+
+if (payButton) {
+    payButton.addEventListener(
+        "click",
+        async function () {
+            const expenseId =
+                payButton.dataset.expenseId;
+            const confirmation =
+                confirm(
+                    "Voulez-vous marquer cette note comme payée ?"
+                );
+            if (!confirmation) {
+                return;
+            }
+            try {
+                const response =
+                    await fetch(
+                        "/expenses/" + expenseId + "/pay",
+                        {
+                            method: "POST",
+                            credentials: "same-origin",
+                        }
+                    );
+                if (!response.ok) {
+                    const error =
+                        await response.text();
+                    console.error(error);
+                    throw new Error(
+                        "Erreur lors du remboursement"
+                    );
+                }
+                window.location.reload();
+            }
+            catch (error) {
+                console.error(error);
+                alert(
+                    "Impossible de marquer la note comme payée."
+                );
+            }
+        }
+    );
+}
+// upload des justificatifs
+
+
+document.addEventListener(
+    "click",
+    async function (event) {
+        const button =
+            event.target.closest(
+                ".btn-upload-receipt"
+            );
+        if (!button) {
+            return;
+        }
+        const expenseId =
+            button.dataset.expenseId;
+        const itemId =
+            button.dataset.itemId;
+        const container =
+            button.closest(
+                ".receipt-container"
+            );
+        const fileInput =
+            container.querySelector(
+                ".receipt-file"
+            );
+        const message =
+            container.querySelector(
+                ".receipt-message"
+            );
+        if (!fileInput.files.length) {
+            message.innerHTML =
+                '<span class="text-danger">'
+                + 'Sélectionnez un fichier.'
+                + '</span>';
+            return;
+        }
+        const file =
+            fileInput.files[0];
+        const formData =
+            new FormData();
+        formData.append(
+            "file",
+            file
+        );
+        button.disabled = true;
+        button.textContent =
+            "Envoi...";
+        message.innerHTML =
+            '<span class="text-muted">'
+            + 'Envoi du justificatif...'
+            + '</span>';
+        try {
+            const response =
+                await fetch(
+                    "/expenses/"
+                    + expenseId
+                    + "/items/"
+                    + itemId
+                    + "/receipts",
+                    {
+                        method: "POST",
+                        credentials:
+                            "same-origin",
+                        body:
+                            formData
+                    }
+                );
+            if (!response.ok) {
+                const error =
+                    await response.json();
+                throw new Error(
+                    error.detail
+                    ||
+                    "Erreur lors de l'envoi"
+                );
+            }
+            fileInput.value = "";
+            window.location.reload();
+        }
+        catch (error) {
+            console.error(error);
+            message.innerHTML =
+                '<span class="text-danger">'
+                + error.message
+                + '</span>';
+        }
+        finally {
+            button.disabled = false;
+            button.textContent =
+                "Ajouter";
+        }
+    }
+);
+// suppression d'un justificatif
+
+
+document.addEventListener(
+    "click",
+    async function (event) {
+        const button =
+            event.target.closest(
+                ".btn-delete-receipt"
+            );
+        if (!button) {
+            return;
+        }
+        const confirmation =
+            confirm(
+                "Voulez-vous supprimer ce justificatif ?"
+            );
+        if (!confirmation) {
+            return;
+        }
+        const expenseId =
+            button.dataset.expenseId;
+        const receiptId =
+            button.dataset.receiptId;
+        button.disabled = true;
+        button.textContent =
+            "Suppression...";
+        try {
+            const response =
+                await fetch(
+                    "/expenses/"
+                    + expenseId
+                    + "/receipts/"
+                    + receiptId,
+                    {
+                        method: "DELETE",
+                        credentials:
+                            "same-origin"
+                    }
+                );
+            if (!response.ok) {
+                const error =
+                    await response.json();
+                throw new Error(
+                    error.detail
+                    ||
+                    "Erreur lors de la suppression"
+                );
+            }
+            window.location.reload();
+        }
+        catch (error) {
+            console.error(error);
+            alert(
+                error.message
+            );
+            button.disabled = false;
+            button.textContent =
+                "Supprimer";
+        }
+    }
+);
+</script>
+{% endblock %}

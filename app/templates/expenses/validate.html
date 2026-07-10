@@ -1,0 +1,303 @@
+<!-- en-tete -->
+<!-- partie 1 -->
+
+{% extends "base.html" %}
+{% block title %}
+Notes à valider
+{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            Notes à valider
+        </h2>
+        <p class="text-muted mb-0">
+            Notes de frais en attente de traitement
+        </p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        {% if expenses %}
+        <span class="badge bg-primary fs-6">
+            {{ expenses|length }}
+            {% if expenses|length > 1 %}
+                notes en attente
+            {% else %}
+                note en attente
+            {% endif %}
+        </span>
+        {% endif %}
+        <!-- EXPORT -->
+        <button
+            type="button"
+            class="btn btn-success"
+            data-bs-toggle="modal"
+            data-bs-target="#exportModal">
+            📊 Export comptable
+        </button>
+        <!-- MAINTENANCE -->
+        <a
+            href="/admin/maintenance"
+            class="btn btn-outline-secondary">
+            🧹 Maintenance
+        </a>
+    </div>
+</div>
+
+<!-- Partie 2 -->
+{% if expenses %}
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Date</th>
+                        <th>Utilisateur</th>
+                        <th>Libellé</th>
+                        <th class="text-center">
+                            Lignes
+                        </th>
+                        <th>Soumission</th>
+                        <th>Statut</th>
+                        <th class="text-end">
+                            Total
+                        </th>
+                        <th class="text-center">
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for expense in expenses %}
+                    <tr>
+                        <!-- Date -->
+                        <td>
+                            {{ expense.expense_date.strftime("%d/%m/%Y") }}
+                        </td>
+                        <!-- Utilisateur -->
+                        <td>
+                            <strong>
+                                {{ expense.user.full_name }}
+                            </strong>
+                            <br>
+                            <small class="text-muted">
+                                {{ expense.user.email }}
+                            </small>
+                        </td>
+                        <!-- Libellé -->
+                        <td>
+                            {{ expense.label }}
+                        </td>
+                        <!-- Nombre de lignes -->
+                        <td class="text-center">
+                            <span class="badge bg-secondary">
+                                {{ expense.items|length }}
+                            </span>
+                        </td>
+                        <!-- Date de soumission -->
+                        <td>
+                            {% if expense.submitted_at %}
+                                {{ expense.submitted_at.strftime("%d/%m/%Y") }}
+                                <br>
+                                <small class="text-muted">
+                                    {{ expense.submitted_at.strftime("%H:%M") }}
+                                </small>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <!-- Statut -->
+                        <td>
+                            <span class="badge rounded-pill bg-primary">
+                                {{ expense.status.value }}
+                            </span>
+                        </td>
+                        <!-- Total -->
+                        <td class="text-end">
+                            <span class="fw-bold text-success">
+                                {{ "%.2f"|format(expense.total_amount or 0) }} €
+                            </span>
+                        </td>
+                        <!-- Action -->
+                        <td class="text-center">
+                            <a
+                                href="/expenses/{{ expense.id }}"
+                                class="btn btn-sm btn-primary">
+                                Ouvrir
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="card shadow-sm">
+    <div class="card-body text-center py-5">
+        <h4>
+            Aucune note à valider
+        </h4>
+        <p class="text-muted mb-0">
+            Toutes les notes de frais soumises
+            ont été traitées.
+        </p>
+    </div>
+</div>
+{% endif %}
+
+<!-- Partie 3 -->
+<!-- modale export comptable -->
+<div
+    class="modal fade"
+    id="exportModal"
+    tabindex="-1"
+    aria-labelledby="exportModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <!-- EN-TETE -->
+            <div class="modal-header">
+                <h5
+                    class="modal-title"
+                    id="exportModalLabel">
+                    📊 Export comptable
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+            </div>
+            <!-- CONTENU -->
+            <div class="modal-body">
+                <div class="alert alert-info mb-4">
+                    Choisissez la période à exporter.
+                    <hr>
+                    • <strong>ZIP</strong> :
+                    écritures comptables +
+                    justificatifs.
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label
+                            class="form-label">
+                            Date début
+                        </label>
+                        <input
+                            type="date"
+                            id="export-start-date"
+                            class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label
+                            class="form-label">
+                            Date fin
+                        </label>
+                        <input
+                            type="date"
+                            id="export-end-date"
+                            class="form-control">
+                    </div>
+                </div>
+                <div
+                    id="export-message"
+                    class="mt-4">
+                </div>
+            </div>
+            <!-- PIED -->
+            <div class="modal-footer justify-content-between">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+                    Fermer
+                </button>
+                <div class="d-flex gap-2">
+                    <button
+                        type="button"
+                        id="btn-export-zip"
+                        class="btn btn-primary">
+                        📦 Export ZIP
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Partie 4 -->
+<script>
+// export
+
+const exportStartDate =
+    document.getElementById("export-start-date");
+const exportEndDate =
+    document.getElementById("export-end-date");
+const exportMessage =
+    document.getElementById("export-message");
+const exportCsvButton =
+    document.getElementById("btn-export-csv");
+const exportZipButton =
+    document.getElementById("btn-export-zip");
+
+// fonction d'export
+
+function exportExpenses(format) {
+    const startDate = exportStartDate.value;
+    const endDate = exportEndDate.value;
+
+    // Vérification
+    if (!startDate || !endDate) {
+        exportMessage.innerHTML =
+            '<div class="alert alert-danger">'
+            + 'Veuillez sélectionner les deux dates.'
+            + '</div>';
+        return;
+    }
+    if (startDate > endDate) {
+        exportMessage.innerHTML =
+            '<div class="alert alert-danger">'
+            + 'La date de début doit être antérieure à la date de fin.'
+            + '</div>';
+        return;
+    }
+
+    // Confirmation
+    const message =
+        format === "csv"
+        ?
+        "Télécharger le fichier CSV ?"
+        :
+        "Télécharger le ZIP avec les justificatifs ?";
+    if (!confirm(message)) {
+        return;
+    }
+
+    // Téléchargement
+    window.location.href =
+        "/expenses/export"
+        + "?start_date=" + encodeURIComponent(startDate)
+        + "&end_date=" + encodeURIComponent(endDate)
+        + "&format=" + format;
+}
+// evenements
+
+if (exportCsvButton) {
+    exportCsvButton.addEventListener(
+        "click",
+        () => exportExpenses("csv")
+    );
+}
+
+if (exportZipButton) {
+    exportZipButton.addEventListener(
+        "click",
+        () => exportExpenses("zip")
+    );
+}
+</script>
+{% endblock %}

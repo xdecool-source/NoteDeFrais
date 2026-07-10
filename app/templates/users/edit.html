@@ -1,0 +1,456 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+
+Modifier un utilisateur
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- ===================================================== -->
+<!-- EN-TETE                                               -->
+<!-- ===================================================== -->
+
+<div class="mb-4">
+
+    <h2 class="mb-1">
+
+        Modifier l'utilisateur
+
+    </h2>
+
+
+    <p class="text-muted mb-0">
+
+        Gestion du compte de {{ account.full_name }}
+
+    </p>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- FORMULAIRE                                            -->
+<!-- ===================================================== -->
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+
+        <form
+            method="post"
+            action="/users/{{ account.id }}/edit">
+
+
+            <!-- ============================================= -->
+            <!-- INFORMATIONS                                  -->
+            <!-- ============================================= -->
+
+            <h5 class="mb-3">
+
+                Informations
+
+            </h5>
+
+
+            <div class="row">
+
+
+                <!-- NOM COMPLET -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label
+                        for="full_name"
+                        class="form-label">
+
+                        Nom complet
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="full_name"
+                        name="full_name"
+                        class="form-control"
+                        maxlength="150"
+                        value="{{ account.full_name }}"
+                        required>
+
+                </div>
+
+
+                <!-- IDENTIFIANT -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label
+                        for="username"
+                        class="form-label">
+
+                        Identifiant
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        class="form-control"
+                        maxlength="50"
+                        value="{{ account.username }}"
+                        required>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div class="mb-4">
+
+                <label
+                    for="email"
+                    class="form-label">
+
+                    Adresse email
+
+                </label>
+
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="form-control"
+                    maxlength="255"
+                    value="{{ account.email }}"
+                    required>
+
+            </div>
+
+
+            <hr>
+
+
+            <!-- ============================================= -->
+            <!-- DROITS                                        -->
+            <!-- ============================================= -->
+
+            <h5 class="mb-3">
+
+                Droits et statut
+
+            </h5>
+
+
+            <div class="form-check mb-3">
+
+
+                <input
+                    type="checkbox"
+                    id="is_active"
+                    name="is_active"
+                    class="form-check-input"
+
+                    {% if account.is_active %}
+                        checked
+                    {% endif %}
+
+                    {% if account.id == user.id %}
+                        disabled
+                    {% endif %}>
+
+
+                <label
+                    for="is_active"
+                    class="form-check-label">
+
+                    Compte actif
+
+                </label>
+
+
+            </div>
+
+
+            <div class="form-check mb-4">
+
+
+                <input
+                    type="checkbox"
+                    id="is_admin"
+                    name="is_admin"
+                    class="form-check-input"
+
+                    {% if account.is_admin %}
+                        checked
+                    {% endif %}
+
+                    {% if account.id == user.id %}
+                        disabled
+                    {% endif %}>
+
+
+                <label
+                    for="is_admin"
+                    class="form-check-label">
+
+                    Administrateur
+
+                </label>
+
+
+            </div>
+
+
+            {% if account.id == user.id %}
+
+
+                <div class="alert alert-info">
+
+                    Vous modifiez votre propre compte.
+
+                    <br>
+
+                    Vous ne pouvez pas désactiver votre compte
+                    ni retirer votre propre rôle administrateur.
+
+                </div>
+
+
+            {% endif %}
+
+
+            <!-- ============================================= -->
+            <!-- ACTIONS                                       -->
+            <!-- ============================================= -->
+
+            <div class="d-flex gap-2">
+
+
+                <a
+                    href="/users/"
+                    class="btn btn-secondary">
+
+                    Annuler
+
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary">
+
+                    Enregistrer les modifications
+
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+
+                <hr class="my-4">
+
+
+        <!-- ===================================================== -->
+        <!-- REINITIALISATION DU MOT DE PASSE                      -->
+        <!-- ===================================================== -->
+
+        <h5 class="mb-3">
+
+            Réinitialisation du mot de passe
+
+        </h5>
+
+
+        <p class="text-muted">
+
+            Définissez un nouveau mot de passe pour cet utilisateur.
+
+        </p>
+
+
+        <button
+            type="button"
+            class="btn btn-outline-warning"
+            data-bs-toggle="modal"
+            data-bs-target="#resetPasswordModal">
+
+            Réinitialiser le mot de passe
+
+        </button>
+
+
+
+    </div>
+
+</div>
+
+
+
+<!-- ===================================================== -->
+<!-- MODALE REINITIALISATION MOT DE PASSE                  -->
+<!-- ===================================================== -->
+
+<div
+    class="modal fade"
+    id="resetPasswordModal"
+    tabindex="-1"
+    aria-hidden="true">
+
+
+    <div class="modal-dialog modal-dialog-centered">
+
+
+        <div class="modal-content">
+
+
+            <form
+                method="post"
+                action="/users/{{ account.id }}/reset-password">
+
+
+                <!-- EN-TETE -->
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+
+                        Réinitialiser le mot de passe
+
+                    </h5>
+
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+
+                    </button>
+
+                </div>
+
+
+                <!-- CONTENU -->
+
+                <div class="modal-body">
+
+
+                    <p class="text-muted">
+
+                        Nouveau mot de passe pour :
+
+                        <strong>
+
+                            {{ account.full_name }}
+
+                        </strong>
+
+                    </p>
+
+
+                    <!-- NOUVEAU MOT DE PASSE -->
+
+                    <div class="mb-3">
+
+                        <label
+                            for="password"
+                            class="form-label">
+
+                            Nouveau mot de passe
+
+                        </label>
+
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-control"
+                            minlength="8"
+                            required>
+
+                    </div>
+
+
+                    <!-- CONFIRMATION -->
+
+                    <div class="mb-3">
+
+                        <label
+                            for="password_confirmation"
+                            class="form-label">
+
+                            Confirmation du mot de passe
+
+                        </label>
+
+
+                        <input
+                            type="password"
+                            id="password_confirmation"
+                            name="password_confirmation"
+                            class="form-control"
+                            minlength="8"
+                            required>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="modal-footer">
+
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                        Annuler
+
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-warning">
+
+                        Modifier le mot de passe
+
+                    </button>
+
+
+                </div>
+
+
+            </form>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+{% endblock %}

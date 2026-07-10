@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}
+Export Excel
+{% endblock %}
+{% block content %}
+
+<div class="container">
+    <div class="mb-4">
+        <h2>
+            📊 Export Excel
+        </h2>
+        <p class="text-muted">
+            Génère un classeur Excel complet d'un exercice.
+        </p>
+    </div>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="alert alert-info">
+                Le classeur contiendra :
+                <hr>
+                • Synthèse
+                <br>
+                • Notes de frais
+                <br>
+                • Justificatifs
+                <br>
+            </div>
+            <form
+                method="post"
+                id="excelForm">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            Date début
+                        </label>
+                        <input
+                            type="date"
+                            name="start_date"
+                            class="form-control"
+                            required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            Date fin
+                        </label>
+                        <input
+                            type="date"
+                            name="end_date"
+                            class="form-control"
+                            required>
+                    </div>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between">
+                    <a
+                        href="/admin/maintenance"
+                        class="btn btn-secondary">
+                        Retour
+                    </a>
+                    <button
+                        class="btn btn-success"
+                        type="submit">
+                        📊 Télécharger Excel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+
+const excelForm =
+    document.getElementById("excelForm");
+
+excelForm.addEventListener(
+    "submit",
+    function(event){
+        const start =
+            this.start_date.value;
+        const end =
+            this.end_date.value;
+        if(start > end){
+            alert(
+                "La date de début doit être antérieure à la date de fin."
+            );
+            event.preventDefault();
+            return;
+        }
+        const confirmation =
+            confirm(
+                "Générer le classeur Excel ?"
+            );
+        if(!confirmation){
+            event.preventDefault();
+        }
+    }
+);
+</script>
+{% endblock %}

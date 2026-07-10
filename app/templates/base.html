@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1">
+    <title>
+        {% block title %}
+        Note de Frais du Tennis de Table Thuirinois
+        {% endblock %}
+    </title>
+    
+    <!-- BOOTSTRAP      -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- CSS APPLICATION   -->
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/style.css') }}">
+</head>
+<body class="bg-light">
+
+<!-- BARRE DE NAVIGATION       -->
+
+<nav class="navbar navbar-expand-lg bg-primary navbar-dark shadow-sm">
+    <div class="container">
+
+        <!-- NOM APPLICATION -->
+        <a
+            class="navbar-brand fw-bold"
+            href="/dashboard/">
+            TT Thuirinois Saison 26/27
+        </a>
+
+        <!-- MENU UTILISATEUR CONNECTE -->
+        {% if user is defined and user %}
+
+            <!-- BOUTON MENU MOBILE -->
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbar"
+                aria-controls="navbar"
+                aria-expanded="false"
+                aria-label="Afficher le menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div
+                class="collapse navbar-collapse"
+                id="navbar">
+
+                <!-- MENU PRINCIPAL -->
+                <ul class="navbar-nav me-auto">
+
+                    <!-- TABLEAU DE BORD -->
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="/dashboard/">
+                            Tableau de bord
+                        </a>
+                    </li>
+
+                    <!-- MES NOTES -->
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="/expenses/">
+                            Mes notes
+                        </a>
+                    </li>
+
+                    <!-- NOUVELLE NOTE -->
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="/expenses/new">
+                            Nouvelle note
+                        </a>
+                    </li>
+
+                    <!-- MENU ADMINISTRATEUR -->
+                    {% if user.is_admin %}
+
+                        <!-- NOTES A VALIDER -->
+                        <li class="nav-item">
+                            <a
+                                class="nav-link"
+                                href="/expenses/validate">
+                                Notes à valider
+                            </a>
+                        </li>
+
+                        <!-- UTILISATEURS -->
+                        <li class="nav-item">
+                            <a
+                                class="nav-link"
+                                href="/users/">
+                                Utilisateurs
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+
+                <!-- UTILISATEUR CONNECTE -->
+                <ul class="navbar-nav ms-auto">
+
+                    <!-- NOM UTILISATEUR -->
+                    <li class="nav-item">
+                        <span class="navbar-text me-3">
+                            {{ user.full_name }}
+                            {% if user.is_admin %}
+                                <span class="badge bg-warning text-dark ms-1">
+                                    Admin
+                                </span>
+                            {% endif %}
+                        </span>
+                    </li>
+
+                    <!-- DECONNEXION -->
+                    <li class="nav-item">
+                        <a
+                            class="btn btn-outline-light btn-sm"
+                            href="/auth/logout">
+                            Déconnexion
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</nav>
+
+<!-- CONTENU PRINCIPAL -->
+<div class="container my-4">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<!-- JAVASCRIPT BOOTSTRAP -->
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js">
+</script>
+</body>
+</html>

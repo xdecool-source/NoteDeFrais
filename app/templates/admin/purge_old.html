@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}
+Purge des justificatifs
+{% endblock %}
+{% block content %}
+
+<div class="container">
+    <div class="mb-4">
+        <h2>
+            🧹 Purge des justificatifs
+        </h2>
+        <p class="text-muted">
+            Cette opération supprime uniquement les
+            données binaires des justificatifs.
+        </p>
+    </div>
+    {% if request.query_params.get("count") %}
+    <div class="alert alert-success">
+        <strong>
+            Opération terminée.
+        </strong>
+        <br>
+        {{ request.query_params.get("count") }}
+        justificatif(s) ont été purgés.
+    </div>
+    {% endif %}
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <strong>Attention</strong>
+                <hr>
+                Vérifiez que le ZIP des justificatifs
+                est bien sauvegardé sur votre ordinateur.
+                <br><br>
+                Cette opération est irréversible.
+            </div>
+            <form
+                method="post"
+                id="purgeForm">
+                <div class="mb-4">
+                    <label
+                        class="form-label">
+                        Année de début de l'exercice
+                    </label>
+                    <input
+                        type="number"
+                        class="form-control"
+                        name="year"
+                        min="2020"
+                        max="2100"
+                        value="{{ current_year }}"
+                        required>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <a
+                        href="/admin/maintenance"
+                        class="btn btn-secondary">
+                        Retour
+                    </a>
+                    <button
+                        type="submit"
+                        class="btn btn-danger">
+                        🗑 Purger les justificatifs
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+
+const purgeForm =
+    document.getElementById("purgeForm");
+
+purgeForm.addEventListener(
+    "submit",
+    function(event){
+        const confirmation =
+            confirm(
+                "Confirmez-vous la suppression\n\n"
+                + "des données binaires "
+                + "des justificatifs ?"
+            );
+        if(!confirmation){
+            event.preventDefault();
+        }
+    }
+);
+</script>
+{% endblock %}

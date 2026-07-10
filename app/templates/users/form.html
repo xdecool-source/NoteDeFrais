@@ -1,0 +1,291 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+
+Nouvel utilisateur
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- ===================================================== -->
+<!-- EN-TETE                                               -->
+<!-- ===================================================== -->
+
+<div class="mb-4">
+
+    <h2 class="mb-1">
+
+        Nouvel utilisateur
+
+    </h2>
+
+    <p class="text-muted mb-0">
+
+        Création d'un nouveau compte utilisateur
+
+    </p>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- FORMULAIRE                                            -->
+<!-- ===================================================== -->
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+
+        <form
+            method="post"
+            action="/users/new">
+
+
+            <!-- ============================================= -->
+            <!-- INFORMATIONS                                  -->
+            <!-- ============================================= -->
+
+            <h5 class="mb-3">
+
+                Informations
+
+            </h5>
+
+
+            <div class="row">
+
+
+                <!-- NOM COMPLET -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label
+                        for="full_name"
+                        class="form-label">
+
+                        Nom complet
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="full_name"
+                        name="full_name"
+                        class="form-control"
+                        maxlength="150"
+                        required>
+
+                </div>
+
+
+                <!-- IDENTIFIANT -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label
+                        for="username"
+                        class="form-label">
+
+                        Identifiant
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        class="form-control"
+                        maxlength="50"
+                        required>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div class="mb-4">
+
+                <label
+                    for="email"
+                    class="form-label">
+
+                    Adresse email
+
+                </label>
+
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="form-control"
+                    maxlength="255"
+                    required>
+
+            </div>
+
+
+            <hr>
+
+
+            <!-- ============================================= -->
+            <!-- MOT DE PASSE                                  -->
+            <!-- ============================================= -->
+
+            <h5 class="mb-3">
+
+                Mot de passe
+
+            </h5>
+
+
+            <div class="row">
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label
+                        for="password"
+                        class="form-label">
+
+                        Mot de passe
+
+                    </label>
+
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="form-control"
+                        required>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label
+                        for="password_confirmation"
+                        class="form-label">
+
+                        Confirmation
+
+                    </label>
+
+
+                    <input
+                        type="password"
+                        id="password_confirmation"
+                        name="password_confirmation"
+                        class="form-control"
+                        required>
+
+                </div>
+
+
+            </div>
+
+
+            <hr>
+
+
+            <!-- ============================================= -->
+            <!-- DROITS                                        -->
+            <!-- ============================================= -->
+
+            <h5 class="mb-3">
+
+                Droits
+
+            </h5>
+
+
+            <div class="form-check mb-3">
+
+                <input
+                    type="checkbox"
+                    id="is_active"
+                    name="is_active"
+                    class="form-check-input"
+                    checked>
+
+
+                <label
+                    for="is_active"
+                    class="form-check-label">
+
+                    Compte actif
+
+                </label>
+
+            </div>
+
+
+            <div class="form-check mb-4">
+
+                <input
+                    type="checkbox"
+                    id="is_admin"
+                    name="is_admin"
+                    class="form-check-input">
+
+
+                <label
+                    for="is_admin"
+                    class="form-check-label">
+
+                    Administrateur
+
+                </label>
+
+            </div>
+
+
+            <!-- ============================================= -->
+            <!-- ACTIONS                                       -->
+            <!-- ============================================= -->
+
+            <div class="d-flex gap-2">
+
+
+                <a
+                    href="/users/"
+                    class="btn btn-secondary">
+
+                    Annuler
+
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary">
+
+                    Créer l'utilisateur
+
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+</div>
+
+
+{% endblock %}
