@@ -28,7 +28,7 @@ class Settings(BaseSettings):
 
     # Base de données
     
-    DATABASE_URL: str = "DATABASE_URL=postgresql+psycopg://neondb_owner-etc"
+    DATABASE_URL: str
     # Cloudflare R2
 
     R2_ACCOUNT_ID: str = ""
