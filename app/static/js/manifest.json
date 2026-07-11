@@ -1,0 +1,21 @@
+{
+  "id": "/",
+  "name": "Note de Frais",
+  "short_name": "NotesFrais",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1976d2",
+  "icons": [
+    {
+      "src": "/static/ndf-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/ndf.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
