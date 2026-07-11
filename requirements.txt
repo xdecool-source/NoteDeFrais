@@ -1,28 +1,20 @@
-fastapi
-uvicorn[standard]
+fastapi==0.115.14
+starlette==0.46.2
+uvicorn[standard]==0.35.0
 jinja2
 
 sqlalchemy>=2.0
 psycopg[binary]
-
 alembic
-
 python-jose[cryptography]
 passlib[bcrypt]
-
 python-multipart
-
 pydantic
 pydantic-settings
-
 python-dotenv
-
 email-validator
-
 itsdangerous
-
 boto3
-
 openpyxl
 
 
