@@ -4,13 +4,9 @@
 <link rel="manifest" href="/static/js/manifest.json">
 
 <meta name="theme-color" content="#1976d2">
-
 <link rel="apple-touch-icon" href="/static/ndf.png">
-
 <meta name="apple-mobile-web-app-capable" content="yes">
-
 <meta name="apple-mobile-web-app-title" content="Note de Frais">
-
 
 
     <meta charset="UTF-8">
@@ -49,7 +45,6 @@
 
 
 <body class="bg-light">
-
 <!-- BARRE DE NAVIGATION       -->
 
 <nav class="navbar navbar-expand-lg bg-primary navbar-dark shadow-sm">
@@ -86,7 +81,7 @@
                     <!-- TABLEAU DE BORD -->
                     <li class="nav-item">
                         <a
-                            class="nav-link"
+                            class="nav-link {% if request.url.path == '/dashboard/' %}active{% endif %}"
                             href="/dashboard/">
                             Tableau de bord
                         </a>
@@ -95,7 +90,7 @@
                     <!-- MES NOTES -->
                     <li class="nav-item">
                         <a
-                            class="nav-link"
+                            class="nav-link {% if request.url.path == '/expenses/' %}active{% endif %}"
                             href="/expenses/">
                             Mes notes
                         </a>
@@ -104,31 +99,29 @@
                     <!-- NOUVELLE NOTE -->
                     <li class="nav-item">
                         <a
-                            class="nav-link"
+                            class="nav-link {% if request.url.path == '/expenses/new' %}active{% endif %}"
                             href="/expenses/new">
                             Nouvelle note
                         </a>
                     </li>
-
                     <!-- MENU ADMINISTRATEUR -->
                     {% if user.is_admin %}
 
                         <!-- NOTES A VALIDER -->
                         <li class="nav-item">
                             <a
-                                class="nav-link"
+                                class="nav-link {% if request.url.path == '/expenses/validate' %}active{% endif %}"
                                 href="/expenses/validate">
                                 Notes à valider
-                            </a>
+                            </a>           
                         </li>
-
                         <!-- UTILISATEURS -->
                         <li class="nav-item">
                             <a
-                                class="nav-link"
+                                class="nav-link {% if request.url.path == '/users/' %}active{% endif %}"
                                 href="/users/">
                                 Utilisateurs
-                            </a>
+                            </a> 
                         </li>
                     {% endif %}
                 </ul>

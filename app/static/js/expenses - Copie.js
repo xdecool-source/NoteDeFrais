@@ -6,9 +6,6 @@ const form = document.getElementById("expense-form");
 const container = document.getElementById("expense-items");
 const totalElement = document.getElementById("total");
 const expenseId = form.dataset.expenseId || null;
-// Type de la NDF (déterminé par la première dépense)
-let currentExpenseType = null;
-
 
 // boutons d'ajout
 
@@ -35,177 +32,90 @@ console.log(
     expenseId ? "Modification" : "Création"
 );
 
-
-// Filtre le menu "Ajouter une dépense"
-function filterExpenseMenu() {
-
-    const buttons = [
-        {
-            id: "btn-add-item",
-            type: "KM"
-        },
-        {
-            id: "btn-add-meal",
-            type: "REPAS"
-        },
-        {
-            id: "btn-add-supplies",
-            type: "FOURNITURE"
-        },
-        {
-            id: "btn-add-hotel",
-            type: "HOTEL"
-        },
-        {
-            id: "btn-add-other",
-            type: "OTHER"
-        }
-    ];
-
-    buttons.forEach(function (button) {
-
-        const element =
-            document.getElementById(button.id);
-
-        if (!element) {
-            return;
-        }
-
-        const line =
-            element.closest("li");
-
-        if (!line) {
-            return;
-        }
-
-        if (
-            currentExpenseType === null ||
-            currentExpenseType === button.type
-        ) {
-            line.style.display = "";
-        }
-        else {
-            line.style.display = "none";
-        }
-
-    });
-
-}
-
-
-
-
-
 // fonction generique d'ajout
 
-function addExpenseItem(
-    templateId,
-    itemType
-) {
-
-    // Première dépense :
-    // on verrouille le type de la NDF
-
-    if (currentExpenseType === null) {
-
-        currentExpenseType =
-            itemType;
-        console.log("Type choisi :", currentExpenseType);
-        filterExpenseMenu();
-    }
+function addExpenseItem(templateId) {
 
     const template =
         document.getElementById(templateId);
-
     if (!template) {
-
         console.error(
             "Template introuvable :",
             templateId
         );
-
         return;
     }
-
     const clone =
         template.content.cloneNode(true);
-
     container.prepend(clone);
 
     refresh();
 
 }
 
-
-
 // evenements des boutons d'ajout
 
+if (addTravelButton) {
 
-
-const expenseButtons = [
-
-    {
-        button: addTravelButton,
-        template: "travel-template",
-        type: "KM"
-    },
-
-    {
-        button: addMealButton,
-        template: "meal-template",
-        type: "REPAS"
-    },
-
-    {
-        button: addSuppliesButton,
-        template: "supplies-template",
-        type: "FOURNITURE"
-    },
-
-    {
-        button: addHotelButton,
-        template: "hotel-template",
-        type: "HOTEL"
-    },
-
-    {
-        button: addOtherButton,
-        template: "other-template",
-        type: "OTHER"
-    }
-
-];
-
-expenseButtons.forEach(function (expenseButton) {
-
-    if (!expenseButton.button) {
-        return;
-    }
-
-    expenseButton.button.addEventListener(
+    addTravelButton.addEventListener(
         "click",
         function () {
-            console.log("Clic sur", expenseButton.type);
             addExpenseItem(
-                expenseButton.template,
-                expenseButton.type
+                "travel-template"
             );
-
         }
     );
+}
 
-});
+if (addMealButton) {
+
+    addMealButton.addEventListener(
+        "click",
+        function () {
+            addExpenseItem(
+                "meal-template"
+            );
+        }
+    );
+}
 
 
+if (addSuppliesButton) {
+
+    addSuppliesButton.addEventListener(
+        "click",
+        function () {
+            addExpenseItem(
+                "supplies-template"
+            );
+        }
+    );
+}
+
+if (addHotelButton) {
+
+    addHotelButton.addEventListener(
+        "click",
+        function () {
+            addExpenseItem(
+                "hotel-template"
+            );
+        }
+    );
+}
 
 
+if (addOtherButton) {
 
-
-
-
-
-
-
+    addOtherButton.addEventListener(
+        "click",
+        function () {
+            addExpenseItem(
+                "other-template"
+            );
+        }
+    );
+}
 
 // suppression d'une ligne
 
@@ -227,21 +137,6 @@ document.addEventListener(
         if (card) {
 
             card.remove();
-            const firstItem =
-                document.querySelector(
-                    ".expense-item .item-type"
-                );
-            if (firstItem) {
-
-                currentExpenseType =
-                    firstItem.value;
-            }
-            else {
-
-                currentExpenseType = null;
-            }
-
-            filterExpenseMenu();
         }
         refresh();
     }
@@ -599,28 +494,10 @@ async function saveExpense(event) {
 
 // initialisation
 
-// initialisation
-
-const firstItem =
-    document.querySelector(
-        ".expense-item .item-type"
-    );
-
-if (firstItem) {
-
-    currentExpenseType =
-        firstItem.value;
-
-}
-
-filterExpenseMenu();
-
 refresh();
-
 console.log(
     "expenses.js chargé"
 );
-
 console.log(
     "expenseId =",
     expenseId

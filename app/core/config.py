@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     # Application
     
     APP_NAME: str = "Note de Frais"
-    APP_VERSION: str = "1.1 Xdc TT Thuirinois"
+    APP_VERSION: str = "1.2 Xdc TT Thuirinois"
     DEBUG: bool = True
 
     # Sécurité
