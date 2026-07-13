@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     
     SECRET_KEY: str = "change-moi-par-une-cle-secrete"
     ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 120
     
     COOKIE_NAME: str = "auth_token"
     RECEIPT_ARCHIVE_PATH: str = "archives"
@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     # Base de données
     
     DATABASE_URL: str
+    
     # Cloudflare R2
 
     R2_ACCOUNT_ID: str = ""
@@ -38,6 +39,7 @@ class Settings(BaseSettings):
     R2_SECRET_KEY: str = ""
     
     # Chargement du fichier .env
+    
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

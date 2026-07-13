@@ -10,27 +10,68 @@ Connexion
     {{ error }}
 </div>
 {% endif %}
+
 <form action="/auth/login" method="post">
-        <div>
-        <label>Utilisateur</label><br>
+
+    <div class="mb-3">
+        <label for="username" class="form-label">Utilisateur</label>
         <input
             type="text"
+            id="username"
             name="username"
-            required
-        >
+            class="form-control"
+            style="width:270px;"
+            required>
     </div>
-    <br>
-    <div>
-        <label>Mot de passe</label><br>
-        <input
-            type="password"
-            name="password"
-            required
-        >
+
+    <div class="mb-4">
+        <label for="password" class="form-label">Mot de passe</label>
+
+        <div style="position:relative; width:200px;">
+            <input
+                type="password"
+                id="password"
+                name="password"
+                class="form-control"
+                style="padding-right:45px;"
+                required>
+
+            <button
+                type="button"
+                id="togglePassword"
+                style="
+                    position:absolute;
+                    top:50%;
+                    right:12px;
+                    transform:translateY(-50%);
+                    border:none;
+                    background:none;
+                    cursor:pointer;
+                ">
+                <i id="eyeIcon" class="bi bi-eye"></i>
+            </button>
+        </div>
     </div>
-    <br>
-    <button type="submit">
+
+    <button type="submit" class="btn btn-primary">
         Se connecter
     </button>
+
 </form>
+
+
+<script>
+const password = document.getElementById("password");
+const toggle = document.getElementById("togglePassword");
+const eyeIcon = document.getElementById("eyeIcon");
+
+toggle.addEventListener("click", () => {
+    const isHidden = password.type === "password";
+    password.type = isHidden ? "text" : "password";
+
+    eyeIcon.classList.toggle("bi-eye", !isHidden);
+    eyeIcon.classList.toggle("bi-eye-slash", isHidden);
+});
+</script>
+
 {% endblock %}
