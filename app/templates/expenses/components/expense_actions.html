@@ -1,0 +1,52 @@
+<!-- ===================================================== -->
+<!-- ACTIONS SUR LA NOTE                                   -->
+<!-- Variables attendues : expense, user                   -->
+<!-- ===================================================== -->
+<div class="mt-4">
+    <a
+        href="/expenses/"
+        class="btn btn-secondary btn-sm">
+        Retour
+    </a>
+    {% if expense.status.name == "DRAFT" %}
+        <a
+            href="/expenses/{{ expense.id }}/edit"
+            class="btn btn-primary btn-sm">
+            Modifier
+        </a>
+        <button
+            type="button"
+            id="btn-submit-expense"
+            class="btn btn-success btn-sm"
+            data-expense-id="{{ expense.id }}">
+            Soumettre
+        </button>
+    {% endif %}
+    {% if expense.status.name == "SUBMITTED"
+          and user.is_admin %}
+        <button
+            type="button"
+            id="btn-approve-expense"
+            class="btn btn-success btn-sm"
+            data-expense-id="{{ expense.id }}">
+            Valider
+        </button>
+        <button
+            type="button"
+            id="btn-reject-expense"
+            class="btn btn-danger btn-sm"
+            data-expense-id="{{ expense.id }}">
+            Refuser
+        </button>
+    {% endif %}
+    {% if expense.status.name == "APPROVED"
+          and user.is_admin %}
+        <button
+            type="button"
+            id="btn-pay-expense"
+            class="btn btn-success btn-sm"
+            data-expense-id="{{ expense.id }}">
+            Marquer comme payée
+        </button>
+    {% endif %}
+</div>

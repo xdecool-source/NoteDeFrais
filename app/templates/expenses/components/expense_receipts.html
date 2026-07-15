@@ -1,0 +1,82 @@
+<!-- ===================================================== -->
+<!-- JUSTIFICATIFS                                         -->
+<!-- Variables attendues : expense, item                   -->
+<!-- ===================================================== -->
+<hr>
+<div class="receipt-container mt-3">
+        <h6>
+        📎 Justificatifs
+    </h6>
+    {% if item.receipts %}
+        <ul class="list-group mb-3">
+            {% for receipt in item.receipts %}
+                <li
+                    class="
+                        list-group-item
+                        d-flex
+                        justify-content-between
+                        align-items-center
+                    ">
+                    <div>
+                        <strong>
+                            {{ receipt.original_filename }}
+                        </strong>
+                        <br>
+                        <small class="text-muted">
+                            {{ "%.1f"|format(
+                                receipt.file_size / 1024
+                            ) }} Ko
+                        </small>
+                    </div>
+                    <div class="btn-group btn-group-sm">
+                        <a
+                            href="/expenses/{{ expense.id }}/receipts/{{ receipt.id }}/view"
+                            target="_blank"
+                            class="btn btn-outline-primary btn-sm">
+                            Voir
+                        </a>
+                        {% if expense.status.name == "DRAFT" %}
+                            <button
+                                type="button"
+                                class="
+                                    btn
+                                    btn-outline-danger
+                                    btn-delete-receipt
+                                "
+                                data-expense-id="{{ expense.id }}"
+                                data-receipt-id="{{ receipt.id }}">
+                                Supprimer
+                            </button>
+                        {% endif %}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-muted">
+            Aucun justificatif.
+        </p>
+    {% endif %}
+    {% if expense.status.name == "DRAFT" %}
+        <div class="input-group">
+            <input
+                type="file"
+                class="form-control receipt-file"
+                accept=".pdf,.jpg,.jpeg,.png">
+            <button
+                type="button"
+                class="
+                    btn
+                    btn-success
+                    btn-sm
+                    btn-upload-receipt
+                "
+                data-expense-id="{{ expense.id }}"
+                data-item-id="{{ item.id }}">
+                Ajouter
+            </button>
+        </div>
+        <div class="receipt-message mt-2">
+        </div>
+    {% endif %}
+</div>

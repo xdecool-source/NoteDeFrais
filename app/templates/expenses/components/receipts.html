@@ -1,0 +1,23 @@
+{# ====================================================== #}
+{# JUSTIFICATIFS D'UNE LIGNE DE FRAIS                     #}
+{# Variable attendue : item                              #}
+{# ====================================================== #}
+
+<hr>
+<div class="d-flex justify-content-between align-items-center">
+    <div>
+        <strong>📎 Justificatifs</strong>
+        <div
+            class="text-muted small receipt-count"
+            data-item-id="{{ item.id }}">
+            {{ item.receipts|length }}
+            justificatif(s)
+        </div>
+    </div>
+    <button
+        type="button"
+        class="btn btn-outline-primary btn-sm manage-receipts"
+        data-item-id="{{ item.id }}">
+        Gérer...
+    </button>
+</div>

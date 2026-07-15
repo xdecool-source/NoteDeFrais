@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     
     APP_NAME: str = "Note de Frais"
     APP_VERSION: str = "1.2 Xdc TT Thuirinois"
+    APP_SAISON: str = "Saison 26/27"
     DEBUG: bool = True
 
     # Sécurité

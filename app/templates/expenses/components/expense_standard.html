@@ -1,0 +1,40 @@
+<!-- ===================================================== -->
+<!-- LIGNE DE FRAIS STANDARD                               -->
+<!-- Variable attendue : item                              -->
+<!-- ===================================================== -->
+<div class="card shadow-sm mb-3">
+    <div class="card-header">
+        {% if item.item_type.name == "REPAS" %}
+            Repas
+        {% elif item.item_type.name == "FOURNITURE" %}
+            Fournitures
+        {% elif item.item_type.name == "HOTEL" %}
+            Hôtel
+        {% elif item.item_type.name == "OTHER" %}
+            Autre
+        {% else %}
+            {{ item.item_type.value }}
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="text-muted small">
+                    Description
+                </div>
+                <strong>
+                    {{ item.description or "-" }}
+                </strong>
+            </div>
+            <div class="col-md-3 text-md-end">
+                <div class="text-muted small">
+                    Montant
+                </div>
+                <div class="fs-4 fw-bold text-primary">
+                    {{ "%.2f"|format(item.amount or 0) }} €
+                </div>
+            </div>
+        </div>
+        {% include "expenses/components/expense_receipts.html" %}
+    </div>
+</div>

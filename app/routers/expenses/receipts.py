@@ -211,10 +211,61 @@ async def upload_receipt(
     }
     
     
-    
-    
-    
+# liste des justificatifs d'une ligne de frais
 
+@router.get(
+    "/{expense_id}/items/{item_id}/receipts"
+)
+async def list_receipts(
+    expense_id: int,
+    item_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+
+    # recherche de la ligne de frais
+
+    expense_item = (
+        db.query(ExpenseItem)
+        .join(Expense)
+        .filter(
+            ExpenseItem.id == item_id,
+            Expense.id == expense_id,
+        )
+        .first()
+    )
+
+    # ligne introuvable
+
+    if expense_item is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Ligne de frais introuvable",
+        )
+
+    # vérification des droits
+
+    if (
+        expense_item.expense.user_id != current_user.id
+        and not current_user.is_admin
+    ):
+        raise HTTPException(
+            status_code=403,
+            detail="Accès interdit",
+        )
+
+    # retour JSON
+
+    return [
+        {
+            "id": receipt.id,
+            "filename": receipt.original_filename,
+            "size": receipt.file_size,
+            "content_type": receipt.content_type,
+        }
+        for receipt in expense_item.receipts
+    ]
+    
 # voir un justificatif
 
 @router.get(

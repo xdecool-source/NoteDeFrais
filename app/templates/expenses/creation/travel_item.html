@@ -1,0 +1,119 @@
+<div class="card shadow-sm mb-3 expense-item">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <strong>
+            Déplacement
+        </strong>
+        <button
+            type="button"
+            class="btn btn-sm btn-outline-danger delete-item">
+            Supprimer
+        </button>
+    </div>
+
+    <div class="card-body">
+        <input
+            type="hidden"
+            class="item-id"
+            value="{{ item.id }}">
+
+        <input
+            type="hidden"
+            class="item-type"
+            value="KM">
+
+        <input
+            type="hidden"
+            class="km-rate"
+            value="{{ item.km_rate }}">
+
+        <!-- VEHICULE ELECTRIQUE -->
+        <div class="form-check mb-3">
+            <input
+                type="checkbox"
+                class="form-check-input electric-vehicle"
+                id="electric-vehicle-{{ item.id }}"
+                {% if item.is_electric_vehicle %}checked{% endif %}>
+
+            <label
+                class="form-check-label"
+                for="electric-vehicle-{{ item.id }}">
+                Véhicule électrique (+20 %) - Pas hybride
+            </label>
+        </div>
+
+        <!-- DEPART / ARRIVEE -->
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">
+                    Départ
+                </label>
+                <input
+                    type="text"
+                    class="form-control departure"
+                    value="{{ item.departure or '' }}">
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">
+                    Arrivée
+                </label>
+                <input
+                    type="text"
+                    class="form-control arrival"
+                    value="{{ item.arrival or '' }}">
+            </div>
+        </div>
+
+        <!-- MONTANTS -->
+        <div class="row">
+
+            <div class="col-6 col-md-3 mb-3">
+                <label class="form-label">
+                    Kilomètres
+                </label>
+                <input
+                    type="number"
+                    class="form-control kilometers"
+                    step="0.1"
+                    value="{{ item.kilometers or 0 }}">
+            </div>
+
+            <div class="col-6 col-md-3 mb-3">
+                <label class="form-label">
+                    Péage
+                </label>
+                <input
+                    type="number"
+                    class="form-control toll-amount"
+                    step="0.01"
+                    value="{{ item.toll_amount or 0 }}">
+            </div>
+
+            <div class="col-6 col-md-3 mb-3">
+                <label class="form-label">
+                    Divers
+                </label>
+                <input
+                    type="number"
+                    class="form-control other-amount"
+                    step="0.01"
+                    value="{{ item.other_amount or 0 }}">
+            </div>
+
+            <div class="col-6 col-md-3 mb-3">
+                <label class="form-label">
+                    Montant
+                </label>
+                <input
+                    type="number"
+                    class="form-control amount"
+                    step="0.01"
+                    value="{{ item.amount or 0 }}"
+                    readonly>
+            </div>
+
+            {% include "expenses/components/receipts.html" %}
+
+        </div>
+    </div>
+</div>

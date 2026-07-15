@@ -7,7 +7,6 @@ Nouvelle note de frais
 {% endif %}
 {% endblock %}
 {% block content %}
-
 <div class="row justify-content-center">
     <div class="col-lg-10">
         <div class="card shadow-sm">
@@ -61,11 +60,11 @@ Nouvelle note de frais
                     <!-- ============================================= -->
                     <div class="dropdown mb-4">
                         <button
-                            class="btn btn-primary dropdown-toggle"
+                            class="btn btn-primary dropdown-toggle custom-btn"
                             type="button"
                             data-bs-toggle="dropdown"
                             aria-expanded="false">
-                            ➕ Ajouter une dépense
+                            Ajouter une dépense
                         </button>
                         <ul class="dropdown-menu">
                             <li>
@@ -73,7 +72,7 @@ Nouvelle note de frais
                                     type="button"
                                     class="dropdown-item"
                                     id="btn-add-item">
-                                    🚗 Déplacement
+                                    Déplacement
                                 </button>
                             </li>
                             <li>
@@ -81,7 +80,7 @@ Nouvelle note de frais
                                     type="button"
                                     class="dropdown-item"
                                     id="btn-add-supplies">
-                                    🛒 Fournitures
+                                    Fournitures
                                 </button>
                             </li>
                             <li>
@@ -89,7 +88,7 @@ Nouvelle note de frais
                                     type="button"
                                     class="dropdown-item"
                                     id="btn-add-meal">
-                                    🍽 Repas
+                                    Repas
                                 </button>
                             </li>
                             <li>
@@ -97,7 +96,7 @@ Nouvelle note de frais
                                     type="button"
                                     class="dropdown-item"
                                     id="btn-add-hotel">
-                                    🏨 Hôtel
+                                    Hôtel
                                 </button>
                             </li>
                             <li>
@@ -105,7 +104,7 @@ Nouvelle note de frais
                                     type="button"
                                     class="dropdown-item"
                                     id="btn-add-other">
-                                    📦 Autre
+                                    Autre
                                 </button>
                             </li>
                         </ul>
@@ -119,172 +118,19 @@ Nouvelle note de frais
                                 <!-- ================================= -->
                                 <!-- DEPLACEMENT EXISTANT              -->
                                 <!-- ================================= -->
+
                                 {% if item.item_type.name == "KM" %}
-                                    <div class="card shadow-sm mb-3 expense-item">
-                                        <div class="card-header d-flex justify-content-between align-items-center">
-                                            <strong>
-                                                🚗 Déplacement
-                                            </strong>
-                                            <button
-                                                type="button"
-                                                class="btn btn-sm btn-outline-danger delete-item">
-                                                Supprimer
-                                            </button>
-                                        </div>
-                                        <div class="card-body">
-                                            <input
-                                                type="hidden"
-                                                class="item-id"
-                                                value="{{ item.id }}">
-                                            <input
-                                                type="hidden"
-                                                class="item-type"
-                                                value="KM">
-                                            <input
-                                                type="hidden"
-                                                class="km-rate"
-                                                value="{{ item.km_rate }}">
-                                            <!-- VEHICULE ELECTRIQUE -->
-                                            <div class="form-check mb-3">
-                                                <input
-                                                    type="checkbox"
-                                                    class="form-check-input electric-vehicle"
-                                                    id="electric-vehicle-{{ item.id }}"
-                                                    {% if item.is_electric_vehicle %}
-                                                        checked
-                                                    {% endif %}>
-                                                <label
-                                                    class="form-check-label"
-                                                    for="electric-vehicle-{{ item.id }}">
-                                                    Véhicule électrique (+20 %) - Pas hybride
-                                                </label>
-                                            </div>
-                                            <!-- DEPART / ARRIVEE -->
-                                            <div class="row">
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label">
-                                                        Départ
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        class="form-control departure"
-                                                        value="{{ item.departure or '' }}">
-                                                </div>
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label">
-                                                        Arrivée
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        class="form-control arrival"
-                                                        value="{{ item.arrival or '' }}">
-                                                </div>
-                                            </div>
-                                            <!-- MONTANTS -->
-                                            <div class="row">
-                                                <div class="col-6 col-md-3 mb-3">
-                                                    <label class="form-label">
-                                                        Kilomètres
-                                                    </label>
-                                                    <input
-                                                        type="number"
-                                                        class="form-control kilometers"
-                                                        step="0.1"
-                                                        value="{{ item.kilometers or 0 }}">
-                                                </div>
-                                                <div class="col-6 col-md-3 mb-3">
-                                                    <label class="form-label">
-                                                        Péage
-                                                    </label>
-                                                    <input
-                                                        type="number"
-                                                        class="form-control toll-amount"
-                                                        step="0.01"
-                                                        value="{{ item.toll_amount or 0 }}">
-                                                </div>
-                                                <div class="col-6 col-md-3 mb-3">
-                                                    <label class="form-label">
-                                                        Divers
-                                                    </label>
-                                                    <input
-                                                        type="number"
-                                                        class="form-control other-amount"
-                                                        step="0.01"
-                                                        value="{{ item.other_amount or 0 }}">
-                                                </div>
-                                                <div class="col-6 col-md-3 mb-3">
-                                                    <label class="form-label">
-                                                        Montant
-                                                    </label>
-                                                    <input
-                                                        type="number"
-                                                        class="form-control amount"
-                                                        step="0.01"
-                                                        value="{{ item.amount or 0 }}"
-                                                        readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <!-- ================================= -->
-                                <!-- AUTRES TYPES EXISTANTS            -->
-                                <!-- ================================= -->
+                                    {% include "expenses/creation/travel_item.html" %}
                                 {% else %}
-                                    <div class="card shadow-sm mb-3 expense-item">
-                                        <div class="card-header d-flex justify-content-between align-items-center">
-                                            <strong>
-                                                {% if item.item_type.name == "REPAS" %}
-                                                    🍽 Repas
-                                                {% elif item.item_type.name == "FOURNITURE" %}
-                                                    🛒 Fournitures
-                                                {% elif item.item_type.name == "HOTEL" %}
-                                                    🏨 Hôtel
-                                                {% elif item.item_type.name == "OTHER" %}
-                                                    📦 Autre
-                                                {% else %}
-                                                    Dépense
-                                                {% endif %}
-                                            </strong>
-                                            <button
-                                                type="button"
-                                                class="btn btn-sm btn-outline-danger delete-item">
-                                                Supprimer
-                                            </button>
-                                        </div>
-                                        <div class="card-body">
-                                            <input
-                                                type="hidden"
-                                                class="item-id"
-                                                value="{{ item.id }}">
-                                            <input
-                                                type="hidden"
-                                                class="item-type"
-                                                value="{{ item.item_type.name }}">
-                                            <div class="mb-3">
-                                                <label class="form-label">
-                                                    Description
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    class="form-control description"
-                                                    value="{{ item.description or '' }}">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label">
-                                                    Montant
-                                                </label>
-                                                <input
-                                                    type="number"
-                                                    step="0.01"
-                                                    class="form-control amount"
-                                                    value="{{ item.amount or 0 }}">
-                                            </div>
-                                        </div>
-                                    </div>
+                                     {% include "expenses/creation/simple_item.html" %}
                                 {% endif %}
+                                
                             {% endfor %}
                         {% endif %}
                     </div>
+
+
+
                     <!-- ============================================= -->
                     <!-- TOTAL                                         -->
                     <!-- ============================================= -->
@@ -306,8 +152,8 @@ Nouvelle note de frais
                     <div class="text-end">
                         <button
                             type="submit"
-                            class="btn btn-success btn-lg">
-                            💾 Enregistrer
+                            class="btn btn-success ">
+                             Enregistrer
                         </button>
                     </div>
                 </form>
@@ -315,291 +161,16 @@ Nouvelle note de frais
         </div>
     </div>
 </div>
-<!-- ===================================================== -->
-<!-- TEMPLATE DEPLACEMENT                                  -->
-<!-- ===================================================== -->
-<template id="travel-template">
-    <div class="card shadow-sm mb-3 expense-item">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <strong>
-                🚗 Déplacement
-            </strong>
-            <button
-                type="button"
-                class="btn btn-sm btn-outline-danger delete-item">
-                Supprimer
-            </button>
-        </div>
-        <div class="card-body">
-            <input
-                type="hidden"
-                class="item-id"
-                value="">
-            <input
-                type="hidden"
-                class="item-type"
-                value="KM">
-            <input
-                type="hidden"
-                class="km-rate"
-                value="{{ km_rate }}">
-            <!-- VEHICULE ELECTRIQUE -->
-            <div class="form-check mb-3">
-                <input
-                    type="checkbox"
-                    class="form-check-input electric-vehicle">
-                <label class="form-check-label">
-                    Véhicule électrique (+20 %) - Pas hybride
-                </label>
-            </div>
-            <!-- DEPART / ARRIVEE -->
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">
-                        Départ
-                    </label>
-                    <input
-                        type="text"
-                        class="form-control departure">
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">
-                        Arrivée
-                    </label>
-                    <input
-                        type="text"
-                        class="form-control arrival">
-                </div>
-            </div>
-            <!-- MONTANTS -->
-            <div class="row">
-                <div class="col-6 col-md-3 mb-3">
-                    <label class="form-label">
-                        Kilomètres
-                    </label>
-                    <input
-                        type="number"
-                        step="0.1"
-                        value="0"
-                        class="form-control kilometers">
-                </div>
-                <div class="col-6 col-md-3 mb-3">
-                    <label class="form-label">
-                        Péage
-                    </label>
-                    <input
-                        type="number"
-                        step="0.01"
-                        value="0"
-                        class="form-control toll-amount">
-                </div>
-                <div class="col-6 col-md-3 mb-3">
-                    <label class="form-label">
-                        Divers
-                    </label>
-                    <input
-                        type="number"
-                        step="0.01"
-                        value="0"
-                        class="form-control other-amount">
-                </div>
-                <div class="col-6 col-md-3 mb-3">
-                    <label class="form-label">
-                        Montant
-                    </label>
-                    <input
-                        type="number"
-                        step="0.01"
-                        value="0"
-                        class="form-control amount"
-                        readonly>
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
-<!-- ===================================================== -->
-<!-- TEMPLATE REPAS                                        -->
-<!-- ===================================================== -->
-<template id="meal-template">
-    <div class="card shadow-sm mb-3 expense-item">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <strong>
-                🍽 Repas
-            </strong>
-            <button
-                type="button"
-                class="btn btn-sm btn-outline-danger delete-item">
-                Supprimer
-            </button>
-        </div>
-        <div class="card-body">
-            <input
-                type="hidden"
-                class="item-id"
-                value="">
-            <input
-                type="hidden"
-                class="item-type"
-                value="REPAS">
-            <div class="mb-3">
-                <label class="form-label">
-                    Description
-                </label>
-                <input
-                    type="text"
-                    class="form-control description">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">
-                    Montant
-                </label>
-                <input
-                    type="number"
-                    step="0.01"
-                    value="0"
-                    class="form-control amount">
-            </div>
-        </div>
-    </div>
-</template>
-<!-- ===================================================== -->
-<!-- TEMPLATE FOURNITURES                                  -->
-<!-- ===================================================== -->
-<template id="supplies-template">
-    <div class="card shadow-sm mb-3 expense-item">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <strong>
-                🛒 Fournitures
-            </strong>
-            <button
-                type="button"
-                class="btn btn-sm btn-outline-danger delete-item">
-                Supprimer
-            </button>
-        </div>
-        <div class="card-body">
-            <input
-                type="hidden"
-                class="item-id"
-                value="">
-            <input
-                type="hidden"
-                class="item-type"
-                value="FOURNITURE">
-            <div class="mb-3">
-                <label class="form-label">
-                    Description
-                </label>
-                <input
-                    type="text"
-                    class="form-control description">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">
-                    Montant
-                </label>
-                <input
-                    type="number"
-                    step="0.01"
-                    value="0"
-                    class="form-control amount">
-            </div>
-        </div>
-    </div>
-</template>
-<!-- ===================================================== -->
-<!-- TEMPLATE HOTEL                                        -->
-<!-- ===================================================== -->
-<template id="hotel-template">
-    <div class="card shadow-sm mb-3 expense-item">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <strong>
-                🏨 Hôtel
-            </strong>
-            <button
-                type="button"
-                class="btn btn-sm btn-outline-danger delete-item">
-                Supprimer
-            </button>
-        </div>
-        <div class="card-body">
-            <input
-                type="hidden"
-                class="item-id"
-                value="">
-            <input
-                type="hidden"
-                class="item-type"
-                value="HOTEL">
-            <div class="mb-3">
-                <label class="form-label">
-                    Description
-                </label>
-                <input
-                    type="text"
-                    class="form-control description">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">
-                    Montant
-                </label>
-                <input
-                    type="number"
-                    step="0.01"
-                    value="0"
-                    class="form-control amount">
-            </div>
-        </div>
-    </div>
-</template>
-<!-- ===================================================== -->
-<!-- TEMPLATE AUTRE                                        -->
-<!-- ===================================================== -->
-<template id="other-template">
-    <div class="card shadow-sm mb-3 expense-item">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <strong>
-                📦 Autre
-            </strong>
-            <button
-                type="button"
-                class="btn btn-sm btn-outline-danger delete-item">
-                Supprimer
-            </button>
-        </div>
-        <div class="card-body">
-            <input
-                type="hidden"
-                class="item-id"
-                value="">
-            <input
-                type="hidden"
-                class="item-type"
-                value="OTHER">
-            <div class="mb-3">
-                <label class="form-label">
-                    Description
-                </label>
-                <input
-                    type="text"
-                    class="form-control description">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">
-                    Montant
-                </label>
-                <input
-                    type="number"
-                    step="0.01"
-                    value="0"
-                    class="form-control amount">
-            </div>
-        </div>
-    </div>
-</template>
+
+{% include "expenses/creation/expense_templates.html" %}
+
+{% include "expenses/creation/receipt_modal.html" %}
+
 <!-- ===================================================== -->
 <!-- JAVASCRIPT                                            -->
 <!-- ===================================================== -->
-<script src="/static/js/expenses.js"></script>
+<script
+    type="module"
+    src="/static/js/expenses.js">
+</script>
 {% endblock %}

@@ -1,0 +1,87 @@
+<!-- ===================================================== -->
+<!-- LIGNE DE FRAIS : DÉPLACEMENT                          -->
+<!-- Variables attendues : expense, item                   -->
+<!-- ===================================================== -->
+<div class="card shadow-sm mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <strong>
+             Déplacement
+        </strong>
+        <span class="fw-bold text-primary">
+            {{ "%.2f"|format(item.amount or 0) }} €
+        </span>
+    </div>
+    <div class="card-body">
+        <div class="row gy-3">
+            <div class="col-md-6">
+                <small class="text-muted">
+                    Départ
+                </small>
+                <div>
+                    {{ item.departure or "-" }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <small class="text-muted">
+                    Arrivée
+                </small>
+                <div>
+                    {{ item.arrival or "-" }}
+                </div>
+            </div>
+        </div>
+        <div class="row gy-3 mt-1">
+            <div class="col-md-3">
+                <small class="text-muted">
+                    Kilométrage
+                </small>
+                <div>
+                    {{ "%.1f"|format(item.kilometers or 0) }}
+                    km
+                </div>
+            </div>
+            <div class="col-md-3">
+                <small class="text-muted">
+                    Tarif
+                </small>
+                <div>
+                    {{ "%.2f"|format(item.km_rate or 0) }}
+                    €/km
+                </div>
+            </div>
+            <div class="col-md-3">
+                <small class="text-muted">
+                    Péage
+                </small>
+                <div>
+                    {{ "%.2f"|format(item.toll_amount or 0) }}
+                    €
+                </div>
+            </div>
+            <div class="col-md-3">
+                <small class="text-muted">
+                    Divers
+                </small>
+                <div>
+                    {{ "%.2f"|format(item.other_amount or 0) }}
+                    €
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <small class="text-muted">
+                    Véhicule
+                </small>
+                <div>
+                    {% if item.is_electric_vehicle %}
+                        Électrique
+                    {% else %}
+                        Thermique
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% include "expenses/components/expense_receipts.html" %}
+    </div>
+</div>

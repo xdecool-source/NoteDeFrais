@@ -1,0 +1,58 @@
+
+<!-- =============================================== -->
+<!-- MODAL JUSTIFICATIFS                             -->
+<!-- =============================================== -->
+<div
+    class="modal fade"
+    id="receiptModal"
+    tabindex="-1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    📎 Justificatifs
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="receipt-list">
+                    Chargement...
+                </div>
+                <hr>
+                <div class="mt-3">
+                    <label
+                        for="receipt-file"
+                        class="form-label">
+                        Nouveau justificatif
+                    </label>
+                    <input
+                        type="file"
+                        id="receipt-file"
+                        class="form-control"
+                        accept=".pdf,.jpg,.jpeg,.png">
+                </div>
+                <div class="mt-3 text-end">
+                    <button
+                        type="button"
+                        id="upload-receipt"
+                        class="btn btn-success">
+                        📎 Ajouter
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+<!-- ===================================================== -->
+<!-- HISTORIQUE DE LA NOTE                                 -->
+<!-- Variable attendue : expense                           -->
+<!-- ===================================================== -->
+ 
+<div class="card shadow-sm mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">
+            Historique
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <div class="text-muted small">
+                    Création
+                </div>
+                <strong>
+                    {{ expense.created_at.strftime("%d/%m/%Y à %H:%M") }}
+                </strong>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="text-muted small">
+                    Soumission
+                </div>
+                <strong>
+                    {% if expense.submitted_at %}
+                        {{ expense.submitted_at.strftime("%d/%m/%Y à %H:%M") }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </strong>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="text-muted small">
+                    Validation
+                </div>
+                <strong>
+                    {% if expense.approved_at %}
+                        {{ expense.approved_at.strftime("%d/%m/%Y à %H:%M") }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </strong>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="text-muted small">
+                    Remboursement
+                </div>
+                <strong>
+                    {% if expense.paid_at %}
+                        {{ expense.paid_at.strftime("%d/%m/%Y à %H:%M") }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </strong>
+            </div>
+        </div>
+        {% if expense.status.name == "REJECTED"
+              and expense.rejection_reason %}
+            <div class="alert alert-danger mb-0">
+                <strong>
+                    Motif du refus
+                </strong>
+                <hr>
+                {{ expense.rejection_reason }}
+            </div>
+        {% endif %}
+    </div>
+</div>

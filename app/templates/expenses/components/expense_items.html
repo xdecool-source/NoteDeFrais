@@ -1,0 +1,21 @@
+<!-- ===================================================== -->
+<!-- LIGNES DE FRAIS                                       -->
+<!-- Variables attendues : expense                         -->
+<!-- ===================================================== -->
+
+<h4 class="mb-3">
+    Lignes de frais
+</h4>
+{% if expense.items %}
+    {% for item in expense.items %}
+        {% if item.item_type.name == "KM" %}
+            {% include "expenses/components/expense_km.html" %}
+        {% else %}
+            {% include "expenses/components/expense_standard.html" %}
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <div class="alert alert-info">
+        Cette note de frais ne contient aucune ligne.
+    </div>
+{% endif %}

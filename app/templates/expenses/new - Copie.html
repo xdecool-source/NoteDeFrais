@@ -7,7 +7,6 @@ Nouvelle note de frais
 {% endif %}
 {% endblock %}
 {% block content %}
-
 <div class="row justify-content-center">
     <div class="col-lg-10">
         <div class="card shadow-sm">
@@ -61,11 +60,11 @@ Nouvelle note de frais
                     <!-- ============================================= -->
                     <div class="dropdown mb-4">
                         <button
-                            class="btn btn-primary dropdown-toggle"
+                            class="btn btn-primary dropdown-toggle custom-btn"
                             type="button"
                             data-bs-toggle="dropdown"
                             aria-expanded="false">
-                            ➕ Ajouter une dépense
+                            Ajouter une dépense
                         </button>
                         <ul class="dropdown-menu">
                             <li>
@@ -73,7 +72,7 @@ Nouvelle note de frais
                                     type="button"
                                     class="dropdown-item"
                                     id="btn-add-item">
-                                    🚗 Déplacement
+                                    Déplacement
                                 </button>
                             </li>
                             <li>
@@ -81,7 +80,7 @@ Nouvelle note de frais
                                     type="button"
                                     class="dropdown-item"
                                     id="btn-add-supplies">
-                                    🛒 Fournitures
+                                    Fournitures
                                 </button>
                             </li>
                             <li>
@@ -89,7 +88,7 @@ Nouvelle note de frais
                                     type="button"
                                     class="dropdown-item"
                                     id="btn-add-meal">
-                                    🍽 Repas
+                                    Repas
                                 </button>
                             </li>
                             <li>
@@ -97,7 +96,7 @@ Nouvelle note de frais
                                     type="button"
                                     class="dropdown-item"
                                     id="btn-add-hotel">
-                                    🏨 Hôtel
+                                    Hôtel
                                 </button>
                             </li>
                             <li>
@@ -105,7 +104,7 @@ Nouvelle note de frais
                                     type="button"
                                     class="dropdown-item"
                                     id="btn-add-other">
-                                    📦 Autre
+                                    Autre
                                 </button>
                             </li>
                         </ul>
@@ -123,7 +122,7 @@ Nouvelle note de frais
                                     <div class="card shadow-sm mb-3 expense-item">
                                         <div class="card-header d-flex justify-content-between align-items-center">
                                             <strong>
-                                                🚗 Déplacement
+                                                Déplacement
                                             </strong>
                                             <button
                                                 type="button"
@@ -221,8 +220,9 @@ Nouvelle note de frais
                                                         class="form-control amount"
                                                         step="0.01"
                                                         value="{{ item.amount or 0 }}"
-                                                        readonly>
+                                                        readonly>                                                  
                                                 </div>
+                                                {% include "expenses/components/receipts.html" %}                          
                                             </div>
                                         </div>
                                     </div>
@@ -279,6 +279,7 @@ Nouvelle note de frais
                                                     class="form-control amount"
                                                     value="{{ item.amount or 0 }}">
                                             </div>
+                                            {% include "expenses/components/receipts.html" %}
                                         </div>
                                     </div>
                                 {% endif %}
@@ -306,8 +307,8 @@ Nouvelle note de frais
                     <div class="text-end">
                         <button
                             type="submit"
-                            class="btn btn-success btn-lg">
-                            💾 Enregistrer
+                            class="btn btn-success ">
+                             Enregistrer
                         </button>
                     </div>
                 </form>
@@ -322,7 +323,7 @@ Nouvelle note de frais
     <div class="card shadow-sm mb-3 expense-item">
         <div class="card-header d-flex justify-content-between align-items-center">
             <strong>
-                🚗 Déplacement
+                Déplacement
             </strong>
             <button
                 type="button"
@@ -425,7 +426,7 @@ Nouvelle note de frais
     <div class="card shadow-sm mb-3 expense-item">
         <div class="card-header d-flex justify-content-between align-items-center">
             <strong>
-                🍽 Repas
+                Repas
             </strong>
             <button
                 type="button"
@@ -470,7 +471,7 @@ Nouvelle note de frais
     <div class="card shadow-sm mb-3 expense-item">
         <div class="card-header d-flex justify-content-between align-items-center">
             <strong>
-                🛒 Fournitures
+                Fournitures
             </strong>
             <button
                 type="button"
@@ -515,7 +516,7 @@ Nouvelle note de frais
     <div class="card shadow-sm mb-3 expense-item">
         <div class="card-header d-flex justify-content-between align-items-center">
             <strong>
-                🏨 Hôtel
+                Hôtel
             </strong>
             <button
                 type="button"
@@ -560,7 +561,7 @@ Nouvelle note de frais
     <div class="card shadow-sm mb-3 expense-item">
         <div class="card-header d-flex justify-content-between align-items-center">
             <strong>
-                📦 Autre
+                Autre
             </strong>
             <button
                 type="button"
@@ -598,8 +599,68 @@ Nouvelle note de frais
         </div>
     </div>
 </template>
+<!-- =============================================== -->
+<!-- MODAL JUSTIFICATIFS                             -->
+<!-- =============================================== -->
+<div
+    class="modal fade"
+    id="receiptModal"
+    tabindex="-1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    📎 Justificatifs
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="receipt-list">
+                    Chargement...
+                </div>
+                <hr>
+                <div class="mt-3">
+                    <label
+                        for="receipt-file"
+                        class="form-label">
+                        Nouveau justificatif
+                    </label>
+                    <input
+                        type="file"
+                        id="receipt-file"
+                        class="form-control"
+                        accept=".pdf,.jpg,.jpeg,.png">
+                </div>
+                <div class="mt-3 text-end">
+                    <button
+                        type="button"
+                        id="upload-receipt"
+                        class="btn btn-success">
+                        📎 Ajouter
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- ===================================================== -->
 <!-- JAVASCRIPT                                            -->
 <!-- ===================================================== -->
-<script src="/static/js/expenses.js"></script>
+<script
+    type="module"
+    src="/static/js/expenses.js">
+</script>
 {% endblock %}

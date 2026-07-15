@@ -14,6 +14,7 @@ def template_context(request: Request, **kwargs):
     context = {
         "request": request,
         "APP_VERSION": settings.APP_VERSION,
+        "APP_SAISON": settings.APP_SAISON, 
     }
     context.update(kwargs)
     return context

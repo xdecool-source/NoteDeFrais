@@ -1,0 +1,57 @@
+<!-- ===================================================== -->
+<!-- MODALE DE REFUS                                       -->
+<!-- ===================================================== -->
+<div
+    class="modal fade"
+    id="rejectExpenseModal"
+    tabindex="-1"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Refuser la note de frais
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+            </div>
+            <div class="modal-body">
+                <label
+                    for="rejection-reason"
+                    class="form-label">
+                    Motif du refus
+                </label>
+                <textarea
+                    id="rejection-reason"
+                    class="form-control"
+                    rows="4"
+                    maxlength="1000"
+                    placeholder="Indiquez le motif du refus..."
+                    required>
+                </textarea>
+                <div
+                    id="rejection-error"
+                    class="text-danger mt-2 d-none">
+                    Le motif doit contenir au moins 3 caractères.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+                    Annuler
+                </button>
+                <button
+                    type="button"
+                    id="btn-confirm-reject"
+                    class="btn btn-danger">
+                    Confirmer le refus
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
