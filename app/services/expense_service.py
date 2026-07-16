@@ -142,7 +142,6 @@ def create_expense(
 
 # modification d'une note de frais
 
-
 def update_expense(
     db: Session,
     expense_id: int,

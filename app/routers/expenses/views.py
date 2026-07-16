@@ -86,6 +86,40 @@ async def expense_list(
             expenses=expenses,
         ),
     )
+    
+    
+@router.get(
+    "/export",
+    response_class=HTMLResponse,
+)
+async def export_page(
+    request: Request,
+    current_user: User = Depends(get_current_user),
+):
+
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=403,
+            detail="Accès interdit",
+        )
+
+    return templates.TemplateResponse(
+        "expenses/export.html",
+        template_context(
+            request,
+            user=current_user,
+        ),
+    )
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 # formulaire nouvelle note de frais
 

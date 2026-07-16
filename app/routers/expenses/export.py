@@ -37,7 +37,7 @@ router = APIRouter()
 # export comptable des notes de frais
 # administrateur uniquement
 
-@router.get("/export")
+@router.get("/export/download")
 def export_expenses(
     start_date: date = Query(...),
     end_date: date = Query(...),

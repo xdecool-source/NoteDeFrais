@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}
+Export comptable
+{% endblock %}
+{% block content %}
+
+<h2 class="mb-4">Export comptable</h2>
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="alert alert-info">
+            Choisissez la période à exporter.
+            <hr>
+            • <strong>ZIP</strong> : écritures comptables + justificatifs.
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="form-label">Date début</label>
+                <input
+                    type="date"
+                    id="export-start-date"
+                    class="form-control">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Date fin</label>
+                <input
+                    type="date"
+                    id="export-end-date"
+                    class="form-control">
+            </div>
+        </div>
+        <div id="export-message" class="mt-4"></div>
+        <div class="mt-4">
+            <button
+                id="btn-export-zip"
+                class="btn btn-primary">
+                Export ZIP
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+const exportStartDate = document.getElementById("export-start-date");
+const exportEndDate = document.getElementById("export-end-date");
+const exportMessage = document.getElementById("export-message");
+const exportZipButton = document.getElementById("btn-export-zip");
+
+function exportExpenses(format) {
+    const startDate = exportStartDate.value;
+    const endDate = exportEndDate.value;
+    if (!startDate || !endDate) {
+        exportMessage.innerHTML =
+            '<div class="alert alert-danger">Veuillez sélectionner les deux dates.</div>';
+        return;
+    }
+    if (startDate > endDate) {
+        exportMessage.innerHTML =
+            '<div class="alert alert-danger">La date de début doit être antérieure à la date de fin.</div>';
+        return;
+    }
+    window.location.href =
+        "/expenses/export/download"
+        + "?start_date=" + encodeURIComponent(startDate)
+        + "&end_date=" + encodeURIComponent(endDate)
+        + "&format=zip";
+}
+exportZipButton.addEventListener("click", () => exportExpenses("zip"));
+</script>
+{% endblock %}

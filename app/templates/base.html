@@ -97,14 +97,48 @@
                                 Notes à valider
                             </a>           
                         </li>
-                        <!-- UTILISATEURS -->
+                         <!-- Export Comptable -->
                         <li class="nav-item">
                             <a
-                                class="nav-link {% if request.url.path == '/users/' %}active{% endif %}"
-                                href="/users/">
-                                Utilisateurs
-                            </a> 
+                                class="nav-link {% if request.url.path == '/expenses/export' %}active{% endif %}"
+                                href="/expenses/export">
+                                Export comptable
+                            </a>
                         </li>
+
+
+
+
+                        <!-- MENU UTILISATEURS -->
+                        <li class="nav-item dropdown">
+                            <a
+                                class="nav-link dropdown-toggle
+                                {% if request.url.path.startswith('/users') or request.url.path.startswith('/admin/maintenance') %}active{% endif %}"
+                                href="#"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                Utilisateurs
+                            </a>
+
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="/users/">
+                                        Utilisateurs
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item" href="/admin/maintenance">
+                                        Maintenance
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+
+
+
                     {% endif %}
                 </ul>
                 <!-- UTILISATEUR CONNECTE -->
