@@ -24,9 +24,8 @@ from app.models.expense import Expense
 from app.models.expense_item import ExpenseItem
 from app.models.enums import ExpenseStatus
 
-from app.services.receipt_file_service import (
-    read_receipt,
-)
+from app.services.receipt_file_service import read_receipt
+from app.services.expense_label_service import build_expense_label
 
 from app.core.file_utils import normalize_filename
 from app.core.config import settings
@@ -214,31 +213,7 @@ def create_export_zip(
         
         # libellé comptable
 
-        if note_type == "KM":
-            total_km = 0
-            departure = expense.items[0].departure or "?"
-            arrival = expense.items[-1].arrival or "?"
-            for item in expense.items:
-                total_km += item.kilometers or 0
-            libelle = (
-                f"Déplacement : "
-                f"{departure} → "
-                f"{arrival} "
-                f"({total_km:.1f} km)"
-            )
-        elif note_type == "HOTEL":
-            libelle = f"Hôtel : {expense.label}"
-        elif note_type == "REPAS":
-            libelle = f"Repas : {expense.label}"
-        elif note_type == "FOURNITURE":
-            libelle = f"Fournitures : {expense.label}"
-        elif note_type == "PEAGE":
-            libelle = f"Péage : {expense.label}"
-        elif note_type == "PARKING":
-            libelle = f"Parking : {expense.label}"
-        else:
-            libelle = expense.label
-
+        libelle = build_expense_label(expense)
         
         # dossier des justificatifs
 

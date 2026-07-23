@@ -22,6 +22,8 @@ from app.core.config import settings
 
 from openpyxl.utils import get_column_letter
 
+from app.services.expense_label_service import build_expense_label
+
 def autofit_columns(sheet):
     
     """
@@ -85,6 +87,7 @@ def create_excel_export(
     total_items = 0
     total_receipts = 0
     total_amount = 0
+    
     for expense in expenses:
         total_amount += (
             expense.total_amount or 0
@@ -118,39 +121,15 @@ def create_excel_export(
         ]
     )
 
+    # contruction du libelle de la feuille excel 
+    
     for expense in expenses:
         if not expense.items:
             continue
-        note_type = expense.items[0].item_type.name
-        if note_type == "KM":
-            total_km = sum(
-                item.kilometers or 0
-                for item in expense.items
-            )
-            departure = (
-                expense.items[0].departure or "?"
-            )
-            arrival = (
-                expense.items[-1].arrival or "?"
-            )
-            libelle = (
-                f"Déplacement : "
-                f"{departure} → "
-                f"{arrival} "
-                f"({total_km:.1f} km)"
-            )
-        elif note_type == "HOTEL":
-            libelle = f"Hôtel : {expense.label}"
-        elif note_type == "REPAS":
-            libelle = f"Repas : {expense.label}"
-        elif note_type == "FOURNITURE":
-            libelle = f"Fournitures : {expense.label}"
-        elif note_type == "PEAGE":
-            libelle = f"Péage : {expense.label}"
-        elif note_type == "PARKING":
-            libelle = f"Parking : {expense.label}"
-        else:
-            libelle = expense.label
+    
+    # libellé comptable appel de cette fonction     
+        libelle = build_expense_label(expense)
+        
         sheet.append(
             [
                 expense.id,

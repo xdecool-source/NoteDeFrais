@@ -25,8 +25,10 @@ from app.routers import auth, dashboard, expenses, users, admin
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     create_tables()
+    print("")
     print("✅ Tables vérifiées/créées")
     yield
+    print("")
     print("👋 Arrêt de l'application")
 
 
