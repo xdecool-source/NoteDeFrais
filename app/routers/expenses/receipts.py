@@ -134,7 +134,7 @@ async def upload_receipt(
     t0 = time.perf_counter()
 
     file_data = await file.read()
-    chrono(t0,"Lecture fichier")
+    # chrono(t0,"Lecture fichier")
     
     # fichier vide
 
@@ -163,7 +163,7 @@ async def upload_receipt(
     file_hash = hashlib.sha256(
         file_data
     ).hexdigest()
-    chrono(t0,"Calcul SHA256")
+    # chrono(t0,"Calcul SHA256")
     
 
     # creation du justificatif
@@ -176,17 +176,17 @@ async def upload_receipt(
         file_size=len(file_data),
         file_hash=file_hash,
     )
-    chrono(t0,"Création objet Receipt")
+    # chrono(t0,"Création objet Receipt")
     # enregistrement
     # premier enregistrement
     # permet d'obtenir l'identifiant
 
     db.add(receipt)
-    chrono(t0,"db.add")
+    # chrono(t0,"db.add")
     db.commit()
-    chrono(t0,"1er commit")
+    # chrono(t0,"1er commit")
     db.refresh(receipt)
-    chrono(t0,"db.refresh")
+    # chrono(t0,"db.refresh")
 
     # stockage du fichier
 
@@ -198,9 +198,9 @@ async def upload_receipt(
         content_type=receipt.content_type,
     )
     
-    chrono(t0,"Upload Cloudflare") 
+    # chrono(t0,"Upload Cloudflare") 
     db.commit()
-    chrono(t0,"Commit final")
+    # chrono(t0,"Commit final")
     db.refresh(receipt)
     
     return {
