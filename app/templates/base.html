@@ -158,15 +158,17 @@
                     </span>
                 </li>
 
-                <!-- CHANGER MOT DE PASSE -->
-                <li class="nav-item me-2">
-                    <a
-                        class="btn btn-outline-light btn-sm"
-                        href="/users/me/password">
-                        <i class="bi bi-key"></i>
-                        Mot de passe
-                    </a>
-                </li>
+                {% if not user.is_admin %}
+                    <!-- CHANGER MOT DE PASSE -->
+                    <li class="nav-item me-2">
+                        <a
+                            class="btn btn-outline-light btn-sm"
+                            href="/users/me/password">
+                            <i class="bi bi-key"></i>
+                            Mot de passe
+                        </a>
+                    </li>
+                {% endif %}
 
                 <!-- DECONNEXION -->
                 <li class="nav-item">
