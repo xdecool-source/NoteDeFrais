@@ -1,6 +1,13 @@
 """
-Ce fichier est le routeur d’administration des utilisateurs.
+Ce fichier est le routeur d’administration des utilisateurs
 Permet à l'admin de gérer les comptes utilisateurs depuis l’interface web.
+
+Il gère principalement quatre fonctionnalités : 
+afficher les utilisateurs
+créer un utilisateur
+modifier un utilisateur
+réinitialiser son mot de passe
+
 """
 
 from fastapi import (
@@ -18,27 +25,26 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.core.dependencies import get_current_admin, get_current_user
+from app.core.dependencies import get_current_admin
 from app.core.template import template_context
 from app.database import get_db
 from app.models.user import User
+from app.core.security import get_password_hash
 
-from app.core.security import (
-    get_password_hash,
-    verify_password,
-)
-
+# router
 
 router = APIRouter(
     prefix="/users",
     tags=["Utilisateurs"],
 )
 
+# templates
 
 templates = Jinja2Templates(
     directory="app/templates"
 )
 
+# liste des utilisateurs
 
 @router.get(
     "/",
@@ -50,11 +56,16 @@ async def users_list(
     current_admin: User = Depends(get_current_admin),
 ):
 
+    # recherche des utilisateurs
+
     users = db.scalars(
-        select(User).order_by(
+        select(User)
+        .order_by(
             User.full_name
         )
     ).all()
+
+    # affichage du template
 
     return templates.TemplateResponse(
         "users/list.html",
@@ -64,7 +75,8 @@ async def users_list(
             users=users,
         ),
     )
-
+    
+# formulaire nouvel utilisateur
 
 @router.get(
     "/new",
@@ -84,6 +96,7 @@ async def new_user_form(
         ),
     )
 
+# creation d'un utilisateur
 
 @router.post("/new")
 async def create_user(
@@ -98,9 +111,13 @@ async def create_user(
     current_admin: User = Depends(get_current_admin),
 ):
 
+    # nettoyage
+
     username = username.strip()
     email = email.strip().lower()
     full_name = full_name.strip()
+
+    # verification des mots de passe
 
     if password != password_confirmation:
         raise HTTPException(
@@ -108,29 +125,34 @@ async def create_user(
             detail="Les mots de passe ne correspondent pas",
         )
 
+    # verification identifiant
+
     existing_username = db.scalar(
         select(User).where(
             User.username == username
         )
     )
-
     if existing_username:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Cet identifiant existe déjà",
         )
 
+    # verification email
+
     existing_email = db.scalar(
         select(User).where(
             User.email == email
         )
     )
-
     if existing_email:
+
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Cette adresse email existe déjà",
         )
+
+    # creation
 
     account = User(
         username=username,
@@ -140,97 +162,34 @@ async def create_user(
         is_active=is_active,
         is_admin=is_admin,
     )
-
     db.add(account)
     db.commit()
-
     return RedirectResponse(
         url="/users/",
         status_code=status.HTTP_303_SEE_OTHER,
     )
-
-
-@router.get(
-    "/me/password",
-    response_class=HTMLResponse,
-)
-async def my_password_form(
-    request: Request,
-    current_user: User = Depends(get_current_user),
-):
-
-    return templates.TemplateResponse(
-        "users/change_password.html",
-        template_context(
-            request,
-            user=current_user,
-        ),
-    )
-
-
-@router.post("/me/password")
-async def change_my_password(
-    current_password: str = Form(...),
-    new_password: str = Form(...),
-    password_confirmation: str = Form(...),
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-
-    if not verify_password(
-        current_password,
-        current_user.hashed_password,
-    ):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Le mot de passe actuel est incorrect",
-        )
-
-    if new_password != password_confirmation:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Les nouveaux mots de passe ne correspondent pas",
-        )
-
-    if len(new_password) < 8:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Le mot de passe doit contenir au moins 8 caractères",
-        )
-
-    current_user.hashed_password = get_password_hash(
-        new_password
-    )
-
-    db.commit()
-
-    return RedirectResponse(
-        url="/dashboard/",
-        status_code=status.HTTP_303_SEE_OTHER,
-    )
+    
+# formulaire modification utilisateur
 
 @router.get(
     "/{user_id}/edit",
     response_class=HTMLResponse,
-)
+    )
 async def edit_user_form(
     user_id: int,
     request: Request,
     db: Session = Depends(get_db),
     current_admin: User = Depends(get_current_admin),
-):
-
+    ):
     account = db.get(
         User,
         user_id,
     )
-
     if account is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
+            status_code=404,
             detail="Utilisateur introuvable",
         )
-
     return templates.TemplateResponse(
         "users/edit.html",
         template_context(
@@ -240,6 +199,7 @@ async def edit_user_form(
         ),
     )
 
+# modification utilisateur
 
 @router.post("/{user_id}/edit")
 async def update_user(
@@ -253,20 +213,25 @@ async def update_user(
     current_admin: User = Depends(get_current_admin),
 ):
 
+    # RECHERCHE DE L'UTILISATEUR
+
     account = db.get(
         User,
         user_id,
     )
-
     if account is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
+            status_code=404,
             detail="Utilisateur introuvable",
         )
+
+    # nettoyage
 
     username = username.strip()
     email = email.strip().lower()
     full_name = full_name.strip()
+
+    # verification identifiant
 
     existing_username = db.scalar(
         select(User).where(
@@ -274,12 +239,13 @@ async def update_user(
             User.id != user_id,
         )
     )
-
     if existing_username:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=400,
             detail="Cet identifiant existe déjà",
         )
+
+    # verification email
 
     existing_email = db.scalar(
         select(User).where(
@@ -287,30 +253,37 @@ async def update_user(
             User.id != user_id,
         )
     )
-
     if existing_email:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=400,
             detail="Cette adresse email existe déjà",
         )
 
+    # securite : admin connecte
+
     if account.id == current_admin.id:
+
+        # L'administrateur connecté ne peut pas
+        # désactiver son propre compte.
         is_active = True
+        # L'administrateur connecté ne peut pas
+        # retirer son propre rôle administrateur.
         is_admin = True
+
+    # modification
 
     account.username = username
     account.email = email
     account.full_name = full_name
     account.is_active = is_active
     account.is_admin = is_admin
-
     db.commit()
-
     return RedirectResponse(
         url="/users/",
-        status_code=status.HTTP_303_SEE_OTHER,
+        status_code=303,
     )
-
+    
+# reinitialisation du mot de passe
 
 @router.post("/{user_id}/reset-password")
 async def reset_user_password(
@@ -320,37 +293,31 @@ async def reset_user_password(
     db: Session = Depends(get_db),
     current_admin: User = Depends(get_current_admin),
 ):
-
     account = db.get(
         User,
         user_id,
     )
-
     if account is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
+            status_code=404,
             detail="Utilisateur introuvable",
         )
-
     if password != password_confirmation:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=400,
             detail="Les mots de passe ne correspondent pas",
         )
-
     if len(password) < 8:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=400,
             detail="Le mot de passe doit contenir au moins 8 caractères",
         )
-
     account.hashed_password = get_password_hash(
         password
     )
-
     db.commit()
-
     return RedirectResponse(
         url=f"/users/{user_id}/edit",
-        status_code=status.HTTP_303_SEE_OTHER,
+        status_code=303,
     )
+    

@@ -132,6 +132,7 @@
                                     <a class="dropdown-item" href="/admin/maintenance">
                                         Maintenance
                                     </a>
+                                    
                                 </li>
                             </ul>
                         </li>
@@ -141,28 +142,42 @@
 
                     {% endif %}
                 </ul>
-                <!-- UTILISATEUR CONNECTE -->
-                <ul class="navbar-nav ms-auto">
-                    <!-- NOM UTILISATEUR -->
-                    <li class="nav-item">
-                        <span class="navbar-text me-3">
-                            {{ user.full_name }}
-                            {% if user.is_admin %}
-                                <span class="badge bg-warning text-dark ms-1">
-                                    Admin
-                                </span>
-                            {% endif %}
-                        </span>
-                    </li>
-                    <!-- DECONNEXION -->
-                    <li class="nav-item">
-                        <a
-                            class="btn btn-outline-light btn-sm"
-                            href="/auth/logout">
-                            Déconnexion
-                        </a>
-                    </li>
-                </ul>
+             <!-- UTILISATEUR CONNECTE -->
+            <ul class="navbar-nav ms-auto">
+
+                <!-- NOM UTILISATEUR -->
+                <li class="nav-item">
+                    <span class="navbar-text me-3">
+                        {{ user.full_name }}
+
+                        {% if user.is_admin %}
+                            <span class="badge bg-warning text-dark ms-1">
+                                Admin
+                            </span>
+                        {% endif %}
+                    </span>
+                </li>
+
+                <!-- CHANGER MOT DE PASSE -->
+                <li class="nav-item me-2">
+                    <a
+                        class="btn btn-outline-light btn-sm"
+                        href="/users/me/password">
+                        <i class="bi bi-key"></i>
+                        Mot de passe
+                    </a>
+                </li>
+
+                <!-- DECONNEXION -->
+                <li class="nav-item">
+                    <a
+                        class="btn btn-outline-light btn-sm"
+                        href="/auth/logout">
+                        Déconnexion
+                    </a>
+                </li>
+
+            </ul>
             </div>
         {% endif %}
     </div>
