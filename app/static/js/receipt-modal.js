@@ -329,7 +329,6 @@ document.addEventListener(
                         method: "POST",
                         body: formData,
                         headers: {
-                            "Content-Type": "application/json",
                             "X-Requested-With": "XMLHttpRequest"
                         }
                     }
