@@ -83,3 +83,37 @@ console.log(
     "expenseId =",
     expenseId
 );
+
+
+
+// Effacer le zéro au premier clic dans Kilomètres, Péage et Divers
+document.addEventListener("focusin", function (event) {
+    const input = event.target;
+
+    if (
+        input.matches(
+            "#expense-items .kilometers, " +
+            "#expense-items .toll-amount, " +
+            "#expense-items .other-amount"
+        ) &&
+        input.value === "0"
+    ) {
+        input.value = "";
+    }
+});
+
+
+// Effacer le zéro au clic dans le montant des dépenses simples
+document.addEventListener("focusin", function (event) {
+    const input = event.target;
+
+    if (
+        input.matches(
+            "#expense-items .expense-item .amount"
+        ) &&
+        !input.readOnly &&
+        input.value === "0"
+    ) {
+        input.value = "";
+    }
+});

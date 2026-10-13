@@ -1,17 +1,36 @@
+
 {# Justificatifs facultatifs, envoyés après l'enregistrement de la note #}
-<hr>
+
+<hr class="receipt-divider">
+
 <div class="receipt-section">
-    <strong>📎 Justificatifs (facultatif)</strong>
-    {% if item is defined and item.id %}
-    <div class="text-muted small receipt-count" data-item-id="{{ item.id }}">
-        {{ item.receipts|length }} justificatif(s) déjà enregistré(s)
+
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-1">
+        <strong>📎 Justificatifs (facultatif)</strong>
+
+        {% if item is defined and item.id %}
+        <span class="text-muted small receipt-count"
+              data-item-id="{{ item.id }}">
+            {{ item.receipts|length }} justificatif(s) enregistré(s)
+        </span>
+        {% endif %}
     </div>
-    {% endif %}
-    <label class="form-label mt-2">Ajouter un ou plusieurs fichiers</label>
-    <input type="file"
-           class="form-control receipt-files"
-           accept=".pdf,.jpg,.jpeg,.png"
-           multiple>
-    <div class="form-text">PDF, JPG ou PNG — 10 Mo maximum par fichier. Vous pouvez laisser ce champ vide.</div>
+
+    <label class="form-label mt-1 mb-1">
+        Ajouter un ou plusieurs fichiers
+    </label>
+
+    <input
+        type="file"
+        class="form-control receipt-files"
+        accept=".pdf,.jpg,.jpeg,.png"
+        multiple>
+
+    <div class="form-text">
+        PDF, JPG ou PNG — 10 Mo maximum par fichier.
+        Champ facultatif.
+    </div>
+
     <div class="small text-muted receipt-pending mt-1"></div>
+
 </div>
