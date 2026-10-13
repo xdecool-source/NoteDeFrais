@@ -105,6 +105,7 @@ def create_expense(
     db.add(expense)
     db.flush()
     total_amount = 0
+    ordered_item_ids = []
 
     for item in expense_data.items:
         # Pour une nouvelle ligne KM :
@@ -131,6 +132,8 @@ def create_expense(
             amount=amount,
         )
         db.add(expense_item)
+        db.flush()
+        ordered_item_ids.append(expense_item.id)
         total_amount += amount
     expense.total_amount = round(
         total_amount,
@@ -138,6 +141,8 @@ def create_expense(
     )
     db.commit()
     db.refresh(expense)
+    # IDs alignés sur l'ordre exact des lignes reçues depuis le formulaire.
+    expense._response_item_ids = ordered_item_ids
     return expense
 
 # modification d'une note de frais
@@ -202,6 +207,7 @@ def update_expense(
     # Lignes conservées
 
     received_ids = set()
+    ordered_item_ids = []
 
     total_amount = 0
 
@@ -330,6 +336,9 @@ def update_expense(
                 expense_item
             )
 
+        # Conserver l'ordre des lignes du formulaire pour l'envoi des justificatifs.
+        db.flush()
+        ordered_item_ids.append(expense_item.id)
         total_amount += amount
 
     # ------------------------------------
@@ -371,6 +380,8 @@ def update_expense(
     db.refresh(
         expense
     )
+    # Attribut transitoire utilisé uniquement pour construire la réponse HTTP.
+    expense._response_item_ids = ordered_item_ids
 
     return expense
 

@@ -51,6 +51,27 @@ initEvents(
     },
     EXPENSE_BUTTONS
 );
+
+// Justificatifs facultatifs directement dans chaque dépense.
+// Les fichiers sont conservés dans le navigateur jusqu'à l'enregistrement.
+function ensureReceiptInputs() {
+    document.querySelectorAll(".expense-item").forEach((card) => {
+        if (card.querySelector(".receipt-files")) return;
+        const section = document.createElement("div");
+        section.className = "receipt-section mt-3";
+        section.innerHTML = `
+            <hr>
+            <strong>📎 Justificatifs (facultatif)</strong>
+            <label class="form-label mt-2">Ajouter un ou plusieurs fichiers</label>
+            <input type="file" class="form-control receipt-files"
+                   accept=".pdf,.jpg,.jpeg,.png" multiple>
+            <div class="form-text">PDF, JPG ou PNG — 10 Mo maximum par fichier. Vous pouvez laisser ce champ vide.</div>
+            <div class="small text-muted receipt-pending mt-1"></div>`;
+        card.querySelector(".card-body")?.appendChild(section);
+    });
+}
+ensureReceiptInputs();
+new MutationObserver(ensureReceiptInputs).observe(container, { childList: true, subtree: true });
 initReceiptModal();
 
 // Premier calcul

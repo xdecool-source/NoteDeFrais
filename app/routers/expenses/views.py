@@ -167,6 +167,11 @@ async def save_expense(
     return {
         "success": True,
         "expense_id": new_expense.id,
+        "item_ids": getattr(
+            new_expense,
+            "_response_item_ids",
+            [item.id for item in new_expense.items],
+        ),
     }
 
 # formulaire de modification d'une note
@@ -256,6 +261,11 @@ async def update_expense_route(
         "success": True,
         "deleted": False,
         "expense_id": updated.id,
+        "item_ids": getattr(
+            updated,
+            "_response_item_ids",
+            [item.id for item in sorted(updated.items, key=lambda row: row.id)],
+        ),
     }
 
 # detail d'une note
