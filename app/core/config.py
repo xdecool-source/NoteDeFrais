@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     # Application
     
     APP_NAME: str = "Note de Frais"
-    APP_VERSION: str = "1.4 Xdc TT Thuirinois"
+    APP_VERSION: str = "NoteDeFrais V.1.4 Xdc TT Thuirinois"
     APP_SAISON: str = "Saison 26/27"
     DEBUG: bool = True
 
